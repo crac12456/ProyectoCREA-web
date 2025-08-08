@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proyecto CREA</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+  <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+</head>
+<body>
+<header>
+  <img class="logo" src="{{ url_for('static', filename='img/Logo_CREA.png') }}" alt="logo">
+  <ul class="Tema">
+    <li>Smart Blue Centinel</li>
+  </ul>
+  <ul class="right">
+    <li><a href="{{ url_for('index') }}">Inicio</a></li>
+    <li><a href="{{ url_for('control') }}">Control</a></li>
+    <li><a href="{{ url_for('gps') }}">GPS</a></li>
+    <li><a href="{{ url_for('datos') }}">Datos</a></li>
+  </ul>
+</header>
+  <main>
+  <div class="bordes">
+    <h1 class="Datos">
+    <li>Ph</li>
+    <li>Turbidez</li>
+    <li>Temperatura</li>
+    </h1>  
+    </div>
+  </main>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proyecto CREA</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+  <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+</head>
+<body>
+<header>
+  <img class="logo" src="{{ url_for('static', filename='img/Logo_CREA.png') }}" alt="logo">
+  <ul class="Tema">
+    <li>Smart Blue Centinel</li>
+  </ul>
+  <ul class="right">
+    <li><a href="{{ url_for('index') }}">Inicio</a></li>
+    <li><a href="{{ url_for('control') }}">Control</a></li>
+    <li><a href="{{ url_for('gps') }}">GPS</a></li>
+    <li><a href="{{ url_for('datos') }}">Datos</a></li>
+  </ul>
+</header>
+  <main>
+  <div class="bordes">
+      <h1 class="quesomos">¿Quiénes Somos?</h1>
+      <img class="Robot_img1" src="{{ url_for('static', filename='img/test.jpg') }}" alt="Robot Proyecto CREA">
+  <p class="quesomos_texto">    
+      Somos un grupo de jóvenes estudiantes del tercer año de Bachillerato de la Unidad Educativa Particular "Siete de Mayo", motivados por el deseo de generar un impacto positivo en nuestro entorno a través de la tecnología y el conocimiento. Nos caracteriza el compromiso, la creatividad y la vocación por resolver problemáticas reales mediante soluciones prácticas e innovadoras. Nos encontramos participando en el concurso "Proyecto CREA",una iniciativa que promueve la investigación, la robótica y el desarrollo de proyectos con enfoque científico y ambiental. Esta experiencia representa para nosotros una oportunidad no solo de aplicar lo aprendido en el aula, sino también de trabajar en equipo, asumir nuevos retos y demostrar que los jóvenes podemos ser agentes de cambio cuando se nos brinda el espacio y las herramientas adecuada.
+  </p>
+  <h1 class="Nuestro_proyecto">Justificación</h1>
+  <img class="Robot_img2" src="{{ url_for('static', filename='img//images(5).jpeg') }}" alt="Robot Proyecto CREA2">
+  <p class="proyecto_texto">
+    En un mundo donde el acceso al agua limpia se vuelve cada vez más crítico, nuestro proyecto nace con una meta clara: construir un robot capaz de contribuir activamente al cuidado de nuestros cuerpos hídricos. Este sistema autónomo, equipado con una red recolectora de residuos y sensores para medir pH, temperatura y turbidez, no solo limpia físicamente el agua, sino que también recolecta información útil para su monitoreo y conservación. Creemos que la tecnología debe estar al servicio de la vida, y por eso diseñamos una solución práctica, educativa y replicable. Este robot no solo limpia, también educa y concientiza, demostrando que la innovación puede ser aliada del medioambiente. Con este proyecto, buscamos inspirar nuevas formas de proteger el recurso más valioso del planeta: el agua.
+  </p>
+  </div>
+</main>
+</body>
+<footer>
+  <p>Unidad Educativa Particular Siete de Mayo - Proyecto CREA &copy; 2025-2026</p>
+</footer>
+</html>
