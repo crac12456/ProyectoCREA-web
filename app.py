@@ -21,7 +21,7 @@ def control():
     return render_template('control.html')
 
 # Ruta para servir el archivo JS
-@app.route('/controles.js')
+@app.route('/script.js')
 def controles_js():
     return send_from_directory(os.path.join(app.root_path, 'static'), 'controles.js')
 

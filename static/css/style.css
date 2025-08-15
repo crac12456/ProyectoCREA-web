@@ -116,7 +116,7 @@ main {
   text-align: center;
 }
 .Datos {
-  font: 20px;
+  font: 30px;
 }
 .testcam {
   float: center;
@@ -165,6 +165,19 @@ main {
     transform: scale(1.2); /* agranda el botón */
     background-color: rgba(255, 255, 255, 0.6); /* cambia un poco el color */
     transition: all 0.2s ease-in-out; /* suaviza el efecto */
+}
+.datosrobot {
+  font-size: 30px;
+  list-style: none;
+}
+.pH {
+  font-size: 30px;
+}
+.Turbidez {
+  font-size: 30px;
+}
+.Temperatura {
+  font-size: 30px;
 }
 canvas {
     width: 100% !important;

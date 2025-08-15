@@ -3,9 +3,12 @@ const pressedKeys = {};
 
 // Escucha teclado
 document.addEventListener("keydown", function(event) {
-    let key = event.key.toLowerCase();
+    let key = event.key;
 
-    if (["w","a","s","d"].includes(key) && !pressedKeys[key]) {
+    // Convertir a minúscula si no es espacio
+    if(key !== " ") key = key.toLowerCase();
+
+    if (["w","a","s","d"," "].includes(key) && !pressedKeys[key]) {
         pressedKeys[key] = true;
 
         // Enviar la tecla al servidor Flask
@@ -21,9 +24,10 @@ document.addEventListener("keydown", function(event) {
 
 // Escucha cuando se suelta la tecla
 document.addEventListener("keyup", function(event) {
-    let key = event.key.toLowerCase();
+    let key = event.key;
+    if(key !== " ") key = key.toLowerCase();
 
-    if (["w","a","s","d"].includes(key)) {
+    if (["w","a","s","d"," "].includes(key)) {
         pressedKeys[key] = false;
 
         // Quitar animación
