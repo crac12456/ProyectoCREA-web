@@ -34,18 +34,19 @@
     <main>
       <div class="bordes">
         <img class="testcam" src="{{ url_for('static', filename='img/camtest1.png') }}" alt="camara test"/>
-        <div class="control-container">
-          <div class="control-row">
-            <button class="btn-control up">▲</button>
-          </div>
-          <div class="control-row">
-            <button class="btn-control left">◀</button>
-            <button class="btn-control center">●</button>
-            <button class="btn-control right">▶</button>
-          </div>
-          <div class="control-row">
-            <button class="btn-control down">▼</button>
-          </div>
+      <div class="control-container">
+        <div class="control-row">
+          <button class="btn-control up" data-key="w">▲</button>
+        </div>
+        <div class="control-row">
+          <button class="btn-control left" data-key="a">◀</button>
+          <button class="btn-control center">●</button>
+          <button class="btn-control right" data-key="d">▶</button>
+        </div>
+        <div class="control-row">
+          <button class="btn-control down" data-key="s">▼</button>
+        </div>
+      </div>
         </div>
       </div>
     </main>
