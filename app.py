@@ -1,5 +1,26 @@
 from flask import Flask, render_template
 from paho import client 
+import sqlite3 as sql
+
+#creacion de la base de datos 
+
+conn = sql.connect("database.bd")
+cursor = conn.cursor()
+cursor.execute("""
+CREATE TABLE IF NOT EXIST mediciones(
+    id INTEGRER PRIMARY KEY AUTOINCREMENT,
+    dispositivo TEXT,
+    temperatura REAL,
+    ph INTEGRER,
+    turbidez REAL,
+    latitud REAL,
+    longitud REAL,
+    altitud REAL,
+    velocidad REAL,
+    )
+""")
+conn.commit()
+conn.close
 
 app = Flask(__name__)
 

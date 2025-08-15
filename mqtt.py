@@ -1,6 +1,7 @@
 from paho import client as mqtt_client
 import json
 import uuid
+import sqlite3
 
 #definicion de variables que requiere el protocolo mqtt
 broker = 'broker.emqx.io'
@@ -21,6 +22,27 @@ def connect_mqtt() -> mqtt_client:
 
     return client
 
-def suscribe(client: mqtt_client):
-    def on_messaje(client, userdata, msg):
-        pass
+def on_message(client, user_data, msg):
+    print("mensaje recibido")
+    try: 
+        data = json.loads(msg.payload.decode())
+
+        conn = sqlite3.connect("database.bd")
+        cursor = conn.cursor()
+        cursor.execute("""
+            INSERT INTO mediciones(dispositivo, temperatura, ph, turbidez, latitud, longitud, altitud, velocidad)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            data["dispositivo"],
+            data["temperatura"],
+            data["ph"],
+            data["turbidez"],
+            data["latitud"],
+            data["longitud"],
+            data["altitud"],
+            data["velocidad"],
+        ))
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print("error al procesar el json")
