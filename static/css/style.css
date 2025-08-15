@@ -166,6 +166,13 @@ main {
     background-color: rgba(255, 255, 255, 0.6); /* cambia un poco el color */
     transition: all 0.2s ease-in-out; /* suaviza el efecto */
 }
+canvas {
+    width: 100% !important;
+    max-width: 600px;
+    height: 300px !important;
+    margin: 20px auto;
+    display: block;
+}
 footer {
   background-color: black;
   color: white;
@@ -219,7 +226,7 @@ footer {
     padding: 20px;
     width: 95%;
   }
-    .btn-control {
+    .control-container {
         font-size: 16px;
         padding: 10px;
     }
