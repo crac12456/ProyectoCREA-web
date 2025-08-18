@@ -1,7 +1,8 @@
-<<<<<<< HEAD
-from flask import Flask, render_template
+
+from flask import Flask, render_template, send_from_directory
 from paho import client 
 import sqlite3 as sql
+import os
 
 #creacion de la base de datos 
 
@@ -22,10 +23,8 @@ CREATE TABLE IF NOT EXIST mediciones(
 """)
 conn.commit()
 conn.close
-=======
-from flask import Flask, render_template, send_from_directory
-import os
->>>>>>> origin/rama1
+
+
 
 app = Flask(__name__)
 
