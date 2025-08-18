@@ -18,6 +18,7 @@ header {
   flex-wrap: wrap;
 }
 .bordes {
+  text-align: center;
   align-items: center;
   background-color: white;
   margin: 30px auto;
@@ -43,6 +44,7 @@ header {
 
 .left li {
   margin-right: 0%;
+  transition: all 0.2s ease-in-out;
 }
 
 .right {
@@ -60,6 +62,7 @@ header {
   border-radius: 6px;
   font-size: 18px;
   text-decoration: none;
+  transition: all 0.2s ease-in-out;
 }
 
 
@@ -113,7 +116,75 @@ main {
   text-align: center;
 }
 .Datos {
-  font: 20px;
+  font: 30px;
+}
+.testcam {
+  float: center;
+  width: 90%;
+  border-radius: 5%;
+  margin: 0% 1% 0% 1%;
+  background-color: transparent;
+  margin-inline-start: 5.5%;
+  position: relative;
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 20px;
+  border: #e8e8e8;
+}
+.control-container {
+    display: inline-flex;      /* mantiene tamaño ajustado al contenido */
+    flex-direction: column;    /* apila filas verticalmente */
+    align-items: center;       /* centra los botones dentro */
+    padding: 10px;
+    border: 5px solid red;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.6);
+}
+.control-row {
+    display: flex;
+    justify-content: center;   /* centra los botones dentro de la fila */
+    margin: 5px 0;
+}
+.btn-control {
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid white;
+    color: white;
+    font-size: 20px;
+    padding: 12px;
+    margin: 3px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    text-align: center;
+}
+.btn-control:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(1.1);
+}
+.btn-control.active {
+    transform: scale(1.2); /* agranda el botón */
+    background-color: rgba(255, 255, 255, 0.6); /* cambia un poco el color */
+    transition: all 0.2s ease-in-out; /* suaviza el efecto */
+}
+.datosrobot {
+  font-size: 30px;
+  list-style: none;
+}
+.pH {
+  font-size: 30px;
+}
+.Turbidez {
+  font-size: 30px;
+}
+.Temperatura {
+  font-size: 30px;
+}
+canvas {
+    width: 100% !important;
+    max-width: 600px;
+    height: 300px !important;
+    margin: 20px auto;
+    display: block;
 }
 footer {
   background-color: black;
@@ -168,5 +239,8 @@ footer {
     padding: 20px;
     width: 95%;
   }
-}
-
+    .control-container {
+        font-size: 16px;
+        padding: 10px;
+    }
+  }

@@ -5,13 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Proyecto CREA</title>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
-  <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+  <script src="{{ url_for('static', filename='js/chart-data.js') }}" defer></script>
 </head>
 <body>
 <header>
   <img class="logo" src="{{ url_for('static', filename='img/Logo_CREA.png') }}" alt="logo">
   <ul class="Tema">
-    <li>Smart Blue Centinel</li>
+    <li>Smart Blue Sentinel</li>
   </ul>
   <ul class="right">
     <li><a href="{{ url_for('index') }}">Inicio</a></li>
@@ -20,12 +21,29 @@
     <li><a href="{{ url_for('datos') }}">Datos</a></li>
   </ul>
 </header>
-  <main>
+
+<main>
   <div class="bordes">
-    <h1 class="Datos">
-    <li>Ph</li>
-    <li>Turbidez</li>
-    <li>Temperatura</li>
-    </h1>  
+    <h1 class="Datos">Datos del agua</h1>
+    <ul class="datosrobot">
+      <li>pH: <span id="phValue">--</span></li>
+      <li>Turbidez: <span id="turbidezValue">--</span></li>
+      <li>Temperatura: <span id="tempValue">--</span></li>
+    </ul>
+
+    <div>
+      <h3 class="pH">Gráfico de pH</h3>
+      <canvas id="phChart"></canvas>
     </div>
-  </main>
+    <div>
+      <h3 class="Turbidez">Gráfico de Turbidez</h3>
+      <canvas id="turbidezChart"></canvas>
+    </div>
+    <div>
+      <h3 class="Temperatura">Gráfico de Temperatura</h3>
+      <canvas id="tempChart"></canvas>
+    </div>
+  </div>
+</main>
+</body>
+</html>
