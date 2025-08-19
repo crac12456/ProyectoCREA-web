@@ -6,7 +6,13 @@
   <title>Proyecto CREA</title>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
   <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/CREA.ico') }}">
 </head>
+<script>
+  window.addEventListener("load", function() {
+    document.body.classList.add("loaded");
+  });
+</script>
 <body>
 <header>
   <img class="logo" src="{{ url_for('static', filename='img/Logo_CREA.png') }}" alt="logo">

@@ -8,6 +8,11 @@
 body {
   background-color: black;
   background: #3F84E5;
+  opacity: 0;
+  transition: opacity 0.8s ease-in-out;
+}
+body.loaded {
+  opacity: 1;  /* cuando agregamos la clase loaded → aparece */
 }
 header {
   background-color: #fbbc5d;
