@@ -62,11 +62,15 @@ document.addEventListener("DOMContentLoaded", function() {
         tempChart.update();
     }
 
-    // Simulación de datos (reemplaza luego con tu API o Flask)
-    setInterval(() => {
-        const ph = (6 + Math.random()*2).toFixed(2);
-        const turbidez = (10 + Math.random()*10).toFixed(2);
-        const temp = (20 + Math.random()*5).toFixed(2);
-        updateCharts(ph, turbidez, temp);
-    }, 2000);
+    // 🔄 Obtener datos reales desde Flask cada 3 segundos
+    setInterval(async () => {
+        try {
+            const response = await fetch("/data");
+            const data = await response.json();
+
+            updateCharts(data.ph, data.turbidez, data.temperatura);
+        } catch (error) {
+            console.error("Error obteniendo datos:", error);
+        }
+    }, 3000);
 });
