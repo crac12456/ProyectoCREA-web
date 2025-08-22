@@ -199,13 +199,12 @@ main {
 .btn-control.left {
   top: 50%;
   left: 10%;
-  transform: translate(0%, -50%); 
+  transform: translateY(-50%);  /* solo mover en vertical */
 }
-
 .btn-control.right {
   top: 50%;
   right: 10%;
-  transform: translate(10%, -50%); 
+  transform: translateY(-50%);  /* igual que el izquierdo */
 }
 .btn-control.center {
   width: 60px;
@@ -283,9 +282,11 @@ footer {
   }
 
   .robot-img {
-    width: 90%;
+    width: 200%;
   }
-
+  .robot-img2 {
+    width: 200%;
+  }
   .quesomos, .Nuestro_proyecto {
     font-size: 28px;
   }
