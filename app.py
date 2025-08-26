@@ -1,6 +1,6 @@
 # Importa jsonify para poder enviar respuestas en formato JSON
 from flask import Flask, render_template, send_from_directory, request, jsonify
-from mqtt import publish_message, topic, connect_mqtt
+from mqtt import publish_message, topic_pub, connect_mqtt
 import paho.mqtt.client as mqtt
 import sqlite3 as sql
 import os
@@ -97,19 +97,19 @@ def controles_js():
 @app.route('/control/<key>', methods=['POST'])
 def control_key(key):
     if key == "w":
-        publish_message("adelante")
+        publish_message(topic_pub, "adelante")
         print("Mover hacia adelante")
     elif key == "a":
-        publish_message("izquierda")
+        publish_message(topic_pub, "izquierda")
         print("Mover a la izquierda")
     elif key == "s":
-        publish_message("atras")
+        publish_message(topic_pub, "atras")
         print("Mover hacia atras")
     elif key == "d":
-        publish_message("derecha")
+        publish_message(topic_pub, "derecha")
         print("Mover a la derecha")
     else:
-        publish_message("null")
+        publish_message(topic_pub, "null")
         print(f"Tecla desconocida: {key}")
     return f"Comando {key} recibido"
 
