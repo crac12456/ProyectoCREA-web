@@ -1,6 +1,8 @@
-from flask import Flask, render_template, send_from_directory, request, jsonify
+from flask import Flask, render_template, request, jsonify
 import sqlite3 as sql
 import os
+import threading
+import paho.mqtt.client as mqtt
 
 # ---------------------------
 # Configuración de Flask
@@ -34,11 +36,34 @@ def create_table_if_not_exists():
     conn.commit()
     conn.close()
 
-# Llamar a la función para crear la tabla al inicio del script
-# Esto lo hace de forma segura sin bloquear la aplicación
-create_table_if_not_exists()
+# ---------------------------
+# Lógica de MQTT en un hilo separado
+# ---------------------------
+def on_connect(client, userdata, flags, rc):
+    print("Conectado con código de resultado: " + str(rc))
+    client.subscribe("temperatura")
+    client.subscribe("ph")
+    client.subscribe("turbidez")
+    client.subscribe("GPS")
+    client.subscribe("velocidad")
 
+def on_message(client, userdata, msg):
+    # Aquí puedes agregar la lógica para guardar los datos en la base de datos
+    # A modo de ejemplo, solo se imprime el mensaje
+    print(f"Mensaje recibido: {msg.payload.decode()}")
+
+def mqtt_worker():
+    client = mqtt.Client()
+    client.on_connect = on_connect
+    client.on_message = on_message
+    
+    # Asegúrate de usar las credenciales y el broker correctos
+    client.connect("broker.hivemq.com", 1883, 60)
+    client.loop_forever()
+
+# ---------------------------
 # Rutas de las páginas
+# ---------------------------
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -75,7 +100,6 @@ def get_data():
             "ph": 0,
             "turbidez": 0
         }
-        
     return jsonify(data)
 
 # ---------------------------
@@ -90,17 +114,16 @@ def controles_js():
 # ---------------------------
 @app.route('/control/<key>', methods=['POST'])
 def control_key(key):
-    if key == "w":
-        print("Mover hacia adelante")
-    elif key == "a":
-        print("Mover a la izquierda")
-    elif key == "s":
-        print("Mover hacia atrás")
-    elif key == "d":
-        print("Mover a la derecha")
-    else:
-        print(f"Tecla desconocida: {key}")
+    # Aquí tu lógica para enviar el mensaje MQTT
+    print(f"Comando {key} recibido")
     return f"Comando {key} recibido"
 
+# ---------------------------
+# Iniciar servidor
+# ---------------------------
 if __name__ == "__main__":
+    create_table_if_not_exists()
+    mqtt_thread = threading.Thread(target=mqtt_worker)
+    mqtt_thread.daemon = True
+    mqtt_thread.start()
     app.run(debug=True)
