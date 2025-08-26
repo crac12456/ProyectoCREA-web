@@ -6,7 +6,14 @@
   <title>Proyecto CREA</title>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
   <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/CREA.ico') }}">
+
 </head>
+<script>
+  window.addEventListener("load", function() {
+    document.body.classList.add("loaded");
+  });
+</script>
 <body>
 <header>
   <img class="logo" src="{{ url_for('static', filename='img/Logo_CREA.png') }}" alt="logo">
@@ -25,7 +32,7 @@
       <h1 class="quesomos">¿Quiénes Somos?</h1>
       <img class="Robot_img1" src="{{ url_for('static', filename='img/test.jpg') }}" alt="Robot Proyecto CREA">
   <p class="quesomos_texto">    
-      Somos un grupo de jóvenes estudiantes del tercer año de Bachillerato de la Unidad Educativa Particular "Siete de Mayo", motivados por el deseo de generar un impacto positivo en nuestro entorno a través de la tecnología y el conocimiento. Nos caracteriza el compromiso, la creatividad y la vocación por resolver problemáticas reales mediante soluciones prácticas e innovadoras. Nos encontramos participando en el concurso "Proyecto CREA",una iniciativa que promueve la investigación, la robótica y el desarrollo de proyectos con enfoque científico y ambiental. Esta experiencia representa para nosotros una oportunidad no solo de aplicar lo aprendido en el aula, sino también de trabajar en equipo, asumir nuevos retos y demostrar que los jóvenes podemos ser agentes de cambio cuando se nos brinda el espacio y las herramientas adecuada.
+      Somos un grupo de jóvenes estudiantes del Tercer Año de Bachillerato de la Unidad Educativa Particular "Siete de Mayo", motivados por el deseo de generar un impacto positivo en nuestro entorno a través de la tecnología y el conocimiento. Nos caracteriza el compromiso, la creatividad y la vocación por resolver problemáticas reales mediante soluciones prácticas e innovadoras. Nos encontramos participando en el concurso "Proyecto CREA", una iniciativa que promueve la investigación, la robótica y el desarrollo de proyectos con enfoque científico y ambiental. Esta experiencia representa para nosotros una oportunidad no solo de aplicar lo aprendido en el aula, sino también de trabajar en equipo, asumir nuevos retos y demostrar que los jóvenes podemos ser agentes de cambio cuando se nos brinda el espacio y las herramientas adecuadas.
   </p>
   <h1 class="Nuestro_proyecto">Nuestro Proyecto</h1>
   <img class="Robot_img2" src="{{ url_for('static', filename='img//images(5).jpeg') }}" alt="Robot Proyecto CREA2">

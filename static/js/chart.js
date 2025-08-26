@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function() {
         tempChart.update();
     }
 
-    // 🔄 Obtener datos reales desde Flask cada 3 segundos
+    // Obtener datos reales desde Flask cada 3 segundos
     setInterval(async () => {
         try {
             const response = await fetch("/data");

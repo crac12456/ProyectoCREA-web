@@ -13,7 +13,13 @@
       src="{{ url_for('static', filename='js/script.js') }}"
       defer
     ></script>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/CREA.ico') }}">
   </head>
+  <script>
+  window.addEventListener("load", function() {
+    document.body.classList.add("loaded");
+  });
+</script>
   <body>
     <header>
       <img
