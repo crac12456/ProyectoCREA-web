@@ -4,32 +4,44 @@ from mqtt import publish_message, topic_pub, connect_mqtt
 import paho.mqtt.client as mqtt
 import sqlite3 as sql
 import os
+import threading
 
 client = connect_mqtt()
-client.loop_start()
+if client:
+    client.loop_start()
+else: 
+    print("error al conectarse con el broker")
+    
 
 # ---------------------------
 # Creación de la base de datos
 # ---------------------------
-conn = sql.connect("database.db", check_same_thread=False) 
-cursor = conn.cursor()
 
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS mediciones(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    dispositivo TEXT,
-    temperatura REAL,
-    ph INTEGER,
-    turbidez REAL,
-    latitud REAL,
-    longitud REAL,
-    altitud REAL,
-    velocidad REAL
-)
-""")
+db_lock = threading.Lock()
 
-conn.commit()
-conn.close()
+def init_database():
+    with db_lock:
+        conn = sql.connect("database.db", check_same_thread=False) 
+        cursor = conn.cursor()
+
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS mediciones(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            dispositivo TEXT,
+            temperatura REAL,
+            ph INTEGER,
+            turbidez REAL,
+            latitud REAL,
+            longitud REAL,
+            altitud REAL,
+            velocidad REAL
+        )
+        """)
+
+        conn.commit()
+        conn.close()
+
+init_database()
 
 # ---------------------------
 # Configuración de Flask
@@ -57,32 +69,42 @@ def control():
 # ----------------------------------------------------
 @app.route('/data')
 def get_data():
-    conn = sql.connect("database.db")
-    conn.row_factory = sql.Row  # Permite acceder a los datos por nombre de columna
-    cursor = conn.cursor()
-    
-    # Consulta para obtener el último registro insertado en la base de datos
-    cursor.execute("SELECT temperatura, ph, turbidez FROM mediciones ORDER BY id DESC LIMIT 1")
-    last_record = cursor.fetchone()
-    
-    conn.close()
-    
-    # Si hay datos, los enviamos como JSON. Si no, enviamos valores por defecto.
-    if last_record:
-        data = {
-            "temperatura": last_record["temperatura"],
-            "ph": last_record["ph"],
-            "turbidez": last_record["turbidez"]
-        }
-    else:
-        # Valores por defecto si la base de datos está vacía
-        data = {
-            "temperatura": 0,
-            "ph": 0,
-            "turbidez": 0
-        }
+    try:
+        with db_lock:
+            conn = sql.connect("database.db")
+            conn.row_factory = sql.Row  # Permite acceder a los datos por nombre de columna
+            cursor = conn.cursor()
+            
+            # Consulta para obtener el último registro insertado en la base de datos
+            cursor.execute("""
+                SELECT temperatura, ph, turbidez, timestamp 
+                FROM mediciones 
+                ORDER BY id DESC LIMIT 1
+            """)
+            last_record = cursor.fetchone()
+            
+            conn.close()
+            
+            # Si hay datos, los enviamos como JSON. Si no, enviamos valores por defecto.
+            if last_record:
+                data = {
+                    "temperatura": last_record["temperatura"],
+                    "ph": last_record["ph"],
+                    "turbidez": last_record["turbidez"]
+                }
+            else:
+                # Valores por defecto si la base de datos está vacía
+                data = {
+                    "temperatura": 0,
+                    "ph": 0,
+                    "turbidez": 0,
+                    "timestamp": None
+                }
         
-    return jsonify(data) # Convierte el diccionario de Python a una respuesta JSON
+        return jsonify(data) # Convierte el diccionario de Python a una respuesta JSON
+    except Exception as e:
+        print(f"error fatal al conseguir los datos {e}")
+        return jsonify({"error":"Error al obtener los datos"})
 
 # ---------------------------
 # Servir archivos estáticos 
@@ -96,23 +118,51 @@ def controles_js():
 # ---------------------------
 @app.route('/control/<key>', methods=['POST'])
 def control_key(key):
-    if key == "w":
-        publish_message(topic_pub, "adelante")
-        print("Mover hacia adelante")
-    elif key == "a":
-        publish_message(topic_pub, "izquierda")
-        print("Mover a la izquierda")
-    elif key == "s":
-        publish_message(topic_pub, "atras")
-        print("Mover hacia atras")
-    elif key == "d":
-        publish_message(topic_pub, "derecha")
-        print("Mover a la derecha")
-    else:
-        publish_message(topic_pub, "null")
-        print(f"Tecla desconocida: {key}")
-    return f"Comando {key} recibido"
+    commands = {
+        "w":"adelante",
+        "s":"atras",
+        "a":"izquierda",
+        "d":"derecha",
+        "stop":"stop"
+    }
 
+    command = commands.get(key.lower())
+
+    if command:
+        success = publish_message(topic_pub, command)
+        print(f"comando enviado: {command}")
+
+        return jsonify({
+            "status":"success" if success else "error",
+            "command": command,
+            "key": key
+        })
+    else:
+        publish_message(topic_pub, "stop")
+        print(f"tecla desconocida: {key}, deteniendo")
+        return jsonify({"status":"unknown key", "key": key}), 400
+    
+
+@app.route('/status')
+def system_status():
+    return jsonify({
+        "mqtt_connected": client is not None and client.is_connected() if client else False,
+        "broker": "localhost",
+        "port": 1883,
+        "topics": {
+            "publish": topic_pub,
+            "subscribe": "esp32/robot/sensores"
+        }
+    })
+
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify({"error": "Endpoint no encontrado"}), 404
+
+@app.errorhandler(500)
+def internal_error(error):
+    return jsonify({"error": "Error interno del servidor"}), 500
+    
 # ---------------------------
 # Ejecutar servidor
 # ---------------------------

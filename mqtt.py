@@ -10,6 +10,9 @@ topic_pub = "esp32/robot/control"
 topic_sub = "esp32/robot/sensores"
 client_id = f'python-mqtt-client-{uuid.getnode()}'
 
+username = None
+password = None
+
 # Iniciar el cliente 
 mqtt_client_instance = None
 
@@ -30,17 +33,28 @@ def connect_mqtt() -> mqtt_client:
     client.on_message = on_message
     client.connect(broker, port)
 
-    return client
+    if username and password: 
+        client.username_pw_set(username, password)
+        
+    try:    
+        client.connect(broker, port)
+        mqtt_client_instance = client
+        return client
+    except Exception as e:
+        print(f"error al conectar con el broker {e}")
+        return None
 
 def on_message(client, user_data, msg):
     print("mensaje recibido")
 
-    data = json.loads(msg.payload.decode())
-
-    required_fields = ["dispositivo", "temperatura", "ph", "turbidez", 
-                       "latitud", "longitud", "altitud", "velocidad"]
+    try:
+        required_fields = ["dispositivo", "temperatura", "ph", "turbidez", 
+                        "latitud", "longitud", "altitud", "velocidad"]
+        
+        if not all(field in data for field in required_fields):
+            print("datos faltantes en el json recibido")
+            return
     
-    try: 
         data = json.loads(msg.payload.decode())
 
         conn = sqlite3.connect("database.db")
@@ -80,12 +94,14 @@ def publish_message (topic_pub, mensaje):
             status = result[0]
             if status == 0:
                 print(f"mensaje enviado {topic_pub}: {mensaje}")
+                return True
             else:
                 print(f"error al mandar en mensaje{status}")
+                return False
         except Exception as e:
             print("error al conectarse")
+            return False
     else:
         print("no se a conectado con el broker")
-            
-
-    print(f"enviado {topic_pub}:{mensaje}")
+        return False
+    
