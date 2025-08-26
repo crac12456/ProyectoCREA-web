@@ -1,69 +1,38 @@
-from flask import Flask, render_template, request, jsonify
+# Importa jsonify para poder enviar respuestas en formato JSON
+from flask import Flask, render_template, send_from_directory, request, jsonify
+import paho.mqtt.client as mqtt
 import sqlite3 as sql
 import os
-import threading
-import paho.mqtt.client as mqtt
+
+# ---------------------------
+# Creación de la base de datos (sin cambios)
+# ---------------------------
+conn = sql.connect("database.db", check_same_thread=False) # 'check_same_thread=False' es importante para Flask
+cursor = conn.cursor()
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS mediciones(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    dispositivo TEXT,
+    temperatura REAL,
+    ph INTEGER,
+    turbidez REAL,
+    latitud REAL,
+    longitud REAL,
+    altitud REAL,
+    velocidad REAL
+)
+""")
+
+conn.commit()
+conn.close()
 
 # ---------------------------
 # Configuración de Flask
 # ---------------------------
 app = Flask(__name__)
 
-# Función para obtener la conexión a la base de datos
-def get_db_connection():
-    # Intenta conectar. Si la base de datos no existe, la crea.
-    conn = sql.connect("database.db", check_same_thread=False)
-    conn.row_factory = sql.Row
-    return conn
-
-# Función para crear la tabla de mediciones (si no existe)
-def create_table_if_not_exists():
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute("""
-    CREATE TABLE IF NOT EXISTS mediciones(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        dispositivo TEXT,
-        temperatura REAL,
-        ph INTEGER,
-        turbidez REAL,
-        latitud REAL,
-        longitud REAL,
-        altitud REAL,
-        velocidad REAL
-    )
-    """)
-    conn.commit()
-    conn.close()
-
-# ---------------------------
-# Lógica de MQTT en un hilo separado
-# ---------------------------
-def on_connect(client, userdata, flags, rc):
-    print("Conectado con código de resultado: " + str(rc))
-    client.subscribe("temperatura")
-    client.subscribe("ph")
-    client.subscribe("turbidez")
-    client.subscribe("GPS")
-    client.subscribe("velocidad")
-
-def on_message(client, userdata, msg):
-    # Aquí puedes agregar la lógica para guardar los datos en la base de datos
-    # A modo de ejemplo, solo se imprime el mensaje
-    print(f"Mensaje recibido: {msg.payload.decode()}")
-
-def mqtt_worker():
-    client = mqtt.Client()
-    client.on_connect = on_connect
-    client.on_message = on_message
-    
-    # Asegúrate de usar las credenciales y el broker correctos
-    client.connect("broker.hivemq.com", 1883, 60)
-    client.loop_forever()
-
-# ---------------------------
-# Rutas de las páginas
-# ---------------------------
+# Rutas de las páginas (sin cambios)
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -80,14 +49,22 @@ def datos():
 def control():
     return render_template('control.html')
 
+# ----------------------------------------------------
+# ¡NUEVA RUTA! - Para enviar datos a las gráficas
+# ----------------------------------------------------
 @app.route('/data')
 def get_data():
-    conn = get_db_connection()
+    conn = sql.connect("database.db")
+    conn.row_factory = sql.Row  # Permite acceder a los datos por nombre de columna
     cursor = conn.cursor()
+    
+    # Consulta para obtener el último registro insertado en la base de datos
     cursor.execute("SELECT temperatura, ph, turbidez FROM mediciones ORDER BY id DESC LIMIT 1")
     last_record = cursor.fetchone()
+    
     conn.close()
     
+    # Si hay datos, los enviamos como JSON. Si no, enviamos valores por defecto.
     if last_record:
         data = {
             "temperatura": last_record["temperatura"],
@@ -95,35 +72,41 @@ def get_data():
             "turbidez": last_record["turbidez"]
         }
     else:
+        # Valores por defecto si la base de datos está vacía
         data = {
             "temperatura": 0,
             "ph": 0,
             "turbidez": 0
         }
-    return jsonify(data)
+        
+    return jsonify(data) # Convierte el diccionario de Python a una respuesta JSON
 
 # ---------------------------
-# Servir archivos estáticos
+# Servir archivos estáticos (sin cambios)
 # ---------------------------
 @app.route('/script.js')
 def controles_js():
     return send_from_directory(os.path.join(app.root_path, 'static'), 'controles.js')
 
 # ---------------------------
-# Recibir comandos WASD
+# Recibir comandos WASD (sin cambios)
 # ---------------------------
 @app.route('/control/<key>', methods=['POST'])
 def control_key(key):
-    # Aquí tu lógica para enviar el mensaje MQTT
-    print(f"Comando {key} recibido")
+    if key == "w":
+        print("Mover hacia adelante")
+    elif key == "a":
+        print("Mover a la izquierda")
+    elif key == "s":
+        print("Mover hacia atrás")
+    elif key == "d":
+        print("Mover a la derecha")
+    else:
+        print(f"Tecla desconocida: {key}")
     return f"Comando {key} recibido"
 
 # ---------------------------
-# Iniciar servidor
+# Ejecutar servidor
 # ---------------------------
 if __name__ == "__main__":
-    create_table_if_not_exists()
-    mqtt_thread = threading.Thread(target=mqtt_worker)
-    mqtt_thread.daemon = True
-    mqtt_thread.start()
     app.run(debug=True)
