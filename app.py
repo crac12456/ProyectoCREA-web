@@ -1,13 +1,17 @@
 # Importa jsonify para poder enviar respuestas en formato JSON
 from flask import Flask, render_template, send_from_directory, request, jsonify
+from mqtt import publish_message, topic, connect_mqtt
 import paho.mqtt.client as mqtt
 import sqlite3 as sql
 import os
 
+client = connect_mqtt()
+client.loop_start()
+
 # ---------------------------
-# Creación de la base de datos (sin cambios)
+# Creación de la base de datos
 # ---------------------------
-conn = sql.connect("database.db", check_same_thread=False) # 'check_same_thread=False' es importante para Flask
+conn = sql.connect("database.db", check_same_thread=False) 
 cursor = conn.cursor()
 
 cursor.execute("""
@@ -32,7 +36,6 @@ conn.close()
 # ---------------------------
 app = Flask(__name__)
 
-# Rutas de las páginas (sin cambios)
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -50,7 +53,7 @@ def control():
     return render_template('control.html')
 
 # ----------------------------------------------------
-# ¡NUEVA RUTA! - Para enviar datos a las gráficas
+# enviar datos a las gráficas
 # ----------------------------------------------------
 @app.route('/data')
 def get_data():
@@ -82,26 +85,31 @@ def get_data():
     return jsonify(data) # Convierte el diccionario de Python a una respuesta JSON
 
 # ---------------------------
-# Servir archivos estáticos (sin cambios)
+# Servir archivos estáticos 
 # ---------------------------
 @app.route('/script.js')
 def controles_js():
     return send_from_directory(os.path.join(app.root_path, 'static'), 'controles.js')
 
 # ---------------------------
-# Recibir comandos WASD (sin cambios)
+# Recibir comandos WASD 
 # ---------------------------
 @app.route('/control/<key>', methods=['POST'])
 def control_key(key):
     if key == "w":
+        publish_message("adelante")
         print("Mover hacia adelante")
     elif key == "a":
+        publish_message("izquierda")
         print("Mover a la izquierda")
     elif key == "s":
-        print("Mover hacia atrás")
+        publish_message("atras")
+        print("Mover hacia atras")
     elif key == "d":
+        publish_message("derecha")
         print("Mover a la derecha")
     else:
+        publish_message("null")
         print(f"Tecla desconocida: {key}")
     return f"Comando {key} recibido"
 
