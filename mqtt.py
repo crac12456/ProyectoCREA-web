@@ -3,7 +3,7 @@ import json
 import uuid
 import sqlite3
 
-#definicion de variables que requiere el protocolo mqtt
+#Definición de variables que requiere el protocolo mqtt
 broker = 'broker.emqx.io'
 port = 1883
 topic_pub = "esp32/robot/control"
@@ -16,16 +16,16 @@ password = None
 # Iniciar el cliente 
 mqtt_client_instance = None
 
-# funcion de coneccion, en esta se conecta al broker para enviar y recibir datos
+# Función de coneccion, en esta se conecta al broker para enviar y recibir datos
 def connect_mqtt() -> mqtt_client:
     global mqtt_client_instance
 
     def on_connect(client, userdata, flags, rc):
         if rc == 0:
-            print("conected to broker")
+            print("Conected to broker")
             client.subscribe(topic_sub)
         else:
-            print("conecction failed, return code: %d\n", rc)
+            print("Conecction failed, return code: %d\n", rc)
 
     
     client = mqtt_client.Client(client_id)
@@ -41,11 +41,11 @@ def connect_mqtt() -> mqtt_client:
         mqtt_client_instance = client
         return client
     except Exception as e:
-        print(f"error al conectar con el broker {e}")
+        print(f"Error al conectar con el broker {e}")
         return None
 
 def on_message(client, user_data, msg):
-    print("mensaje recibido")
+    print("Mensaje recibido")
 
     try:
         required_fields = ["dispositivo", "temperatura", "ph", "turbidez", 
@@ -75,14 +75,14 @@ def on_message(client, user_data, msg):
         conn.commit()
         conn.close()
 
-        print("datos guardados en la bse de datos")
+        print("Datos guardados en la bse de datos")
 
     except json.JSONDecodeError:
-        print("error al decodificar el json")
+        print("Error al decodificar el json")
     except sqlite3.Error:
-        print("error en la base de datos")
+        print("Error en la base de datos")
     except Exception as e:
-        print(f"error inesperado al recibir el mensaje {e}")
+        print(f"Error inesperado al recibir el mensaje {e}")
     
 
 def publish_message (topic_pub, mensaje):
@@ -93,15 +93,15 @@ def publish_message (topic_pub, mensaje):
             result = mqtt_client_instance.publish(topic_pub, mensaje)
             status = result[0]
             if status == 0:
-                print(f"mensaje enviado {topic_pub}: {mensaje}")
+                print(f"Mensaje enviado {topic_pub}: {mensaje}")
                 return True
             else:
-                print(f"error al mandar en mensaje{status}")
+                print(f"Error al mandar en mensaje{status}")
                 return False
         except Exception as e:
-            print("error al conectarse")
+            print("Error al conectarse")
             return False
     else:
-        print("no se a conectado con el broker")
+        print("No se a conectado con el broker")
         return False
     
