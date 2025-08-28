@@ -7,7 +7,7 @@ import threading
 # ---------------------------
 # Definición de variables
 # ---------------------------
-broker = 'broker.emqx.io'
+broker = '192.168.0.113'
 port = 1883
 topic_pub = "esp32/robot/control"
 topic_sub = "esp32/robot/sensores"
