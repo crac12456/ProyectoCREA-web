@@ -66,7 +66,7 @@ header {
   background-color: white;
   margin: 0px auto;
   padding: 30px;
-  max-width: 1000px;
+  max-width: 1500px;
   width: 90%;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
   border-radius: 8px;
@@ -83,22 +83,26 @@ main {
   background-color: rgb(252, 252, 252);
   margin-inline-start: 0%;
   position: relative;
-  max-width: 100%;
+  max-width: 50%;
   height: auto;
   margin-bottom: 20px;
   border: #e8e8e8;
 }
-.quesomos, .Nuestro_proyecto {
+.quesomos, .Nuestro_proyecto, .desarrollo_proyecto, .importancia {
   text-align: center;
-  font-size: 36px;
+  font-size: 40px;
   margin: 15px 0 15px 0;
 }
-.quesomos_texto, .proyecto_texto {
-  font-size: 18px;
+.galeria {
+  font-size: 40px;
+  padding: 0%;
+}
+.quesomos_texto, .proyecto_texto, .desarrollo_texto, .importancia_texto {
+  font-size: 25px;
   text-align: justify;
   line-height: 1.6;
   margin: 0 auto 40px auto;
-  max-width: 800px;
+  max-width: 1200px;
   padding: 0 15px;
 }
 .Robot_img2 {
@@ -109,26 +113,11 @@ main {
   background-color: transparent;
   margin-inline-start: 0%;
   position: relative;
-  max-width: 100%;
+  max-width: 50%;
   height: auto;
   margin-bottom: 20px;
   border: #e8e8e8;
 }
-.desarrollo_proyecto, .importancia, .galeria {
-  text-align: center;
-  font-size: 36px;
-  margin: 40px 0 15px 0;
-}
-
-.desarrollo_texto, .importancia_texto {
-  font-size: 18px;
-  text-align: justify;
-  line-height: 1.6;
-  margin: 0 auto 40px auto;
-  max-width: 800px;
-  padding: 0 15px;
-}
-/* Estilos para las nuevas imágenes */
 .Robot_img3, .Robot_img4 {
   float: center;
   width: 30%;
@@ -137,26 +126,17 @@ main {
   background-color: transparent;
   margin-inline-start: 0%;
   position: relative;
-  max-width: 100%;
+  max-width: 50%;
   height: auto;
   margin-bottom: 20px;
   border: #e8e8e8;
 }
-
-.galeria_container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px; /* Espacio entre imágenes */
-  margin: 20px auto;
-  max-width: 1000px;
-}
 .mapa iframe {
   text-align: center;
   width: 100%;
-  height: 700px; /* puedes ajustarlo según necesites */
+  height: 700px; 
   border: none;
-  border-radius: 10px; /* bordes del iframe */
+  border-radius: 10px; 
 }
 .Datos {
   font: 30px;
@@ -179,14 +159,14 @@ main {
   height: 220px;
   border-radius: 50%;
   background: rgba(0,0,0,0.6);
-  position: relative; /* necesario para posicionar los botones */
+  position: relative; 
   margin: 20px auto;
 }
 .control-row {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0; /* eliminar márgenes que alteran posición */
+  margin: 0; 
   width: 100%;
 }
 .btn-control {
@@ -272,6 +252,20 @@ main {
   position: relative;
   aspect-ratio: 16 / 9; /* mantiene proporción 16:9 */
 }
+.img1, .img2, .img3, .img4, .img5 {
+  width: 40%;
+  padding: 1px
+}
+.galeria_container {
+  width: 40%;
+  height: 100%;
+  max-width: 100px;
+  margin: 40px auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 250px;
+  grid-gap: 20px;
+}
 
 /* Canvas ocupa todo el contenedor */
 .chart-container canvas {
@@ -319,10 +313,10 @@ footer {
   }
 
   .robot-img {
-    width: 200%;
+    width: 100%;
   }
   .robot-img2 {
-    width: 200%;
+    width: 100%;
   }
   .quesomos, .Nuestro_proyecto {
     font-size: 28px;
@@ -373,19 +367,18 @@ footer {
     margin-bottom: 5px;
   }
     .Robot_img1, .Robot_img2, .Robot_img3, .Robot_img4 {
-    float: none; /* Elimina la flotación para que no se apilen */
-    width: 90%; /* Hace que las imágenes ocupen la mayoría del ancho */
+    float: none; 
+    width: 90%; 
     margin-left: auto;
     margin-right: auto;
     display: block;
   }
 
   .quesomos_texto, .proyecto_texto, .desarrollo_texto, .importancia_texto {
-    float: none; /* Elimina la flotación del texto */
-    text-align: left; /* Alinea el texto a la izquierda para mejor lectura */
+    float: none; 
+    text-align: left; 
   }
 
-  /* Asegura que los títulos se vean bien en móviles */
   .desarrollo_proyecto, .importancia {
     font-size: 28px;
     margin: 20px 0 10px 0;
