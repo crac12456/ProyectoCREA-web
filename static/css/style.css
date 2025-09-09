@@ -254,13 +254,12 @@ main {
 }
 .img1, .img2, .img3, .img4, .img5 {
   width: 40%;
-  padding: 1px
 }
-.galeria_container {
+/*.galeria_container {
   width: 40%;
   height: 100%;
   max-width: 100px;
-  margin: 40px auto;
+  padding: 0%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: 250px;

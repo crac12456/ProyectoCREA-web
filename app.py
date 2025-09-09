@@ -70,6 +70,41 @@ def datos():
 def control():
     return render_template('control.html')
 
+# Endpoint para recibir datos JSON a través de una API POST
+@app.route('/api/data', methods=['POST'])
+def receive_data():
+    """Recibe los datos en formato JSON de una solicitud POST y los guarda en la BD."""
+    try:
+        data = request.get_json()
+
+        if not data:
+            return jsonify({"error": "No se recibió un JSON válido"}), 400
+
+        # Validar que el JSON contenga los campos esperados
+        required_fields = ["dispositivo", "temperatura", "ph", "turbidez",
+                          "latitud", "longitud", "altitud", "velocidad"]
+        
+        if not all(field in data for field in required_fields):
+            return jsonify({"error": "Faltan campos en el JSON"}), 400
+        
+        # Guardar los datos en la base de datos
+        with db_lock:
+            with get_db() as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    INSERT INTO mediciones (dispositivo, temperatura, ph, turbidez, latitud, longitud, altitud, velocidad)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                """, (data["dispositivo"], data["temperatura"], data["ph"], data["turbidez"], 
+                      data["latitud"], data["longitud"], data["altitud"], data["velocidad"]))
+                conn.commit()
+        
+        # Retorna una respuesta exitosa al cliente
+        return jsonify({"message": "Datos recibidos y guardados correctamente"}), 200
+        
+    except Exception as e:
+        print(f"Error al procesar la solicitud API: {e}")
+        return jsonify({"error": "Error interno del servidor"}), 500
+
 @app.route('/data')
 def get_data():
     try:
