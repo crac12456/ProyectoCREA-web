@@ -6,48 +6,54 @@ import sqlite3 as sql
 import os
 import threading
 
-client = connect_mqtt()
-if client:
-    client.loop_start()
-else: 
-    print("error al conectarse con el broker")
-    
-
-# ---------------------------
-# Creación de la base de datos
-# ---------------------------
-
-db_lock = threading.Lock()
-
-def init_database():
-    with db_lock:
-        conn = sql.connect("database.db", check_same_thread=False) 
-        cursor = conn.cursor()
-
-        cursor.execute("""
-        CREATE TABLE IF NOT EXISTS mediciones(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            dispositivo TEXT,
-            temperatura REAL,
-            ph INTEGER,
-            turbidez REAL,
-            latitud REAL,
-            longitud REAL,
-            altitud REAL,
-            velocidad REAL
-        )
-        """)
-
-        conn.commit()
-        conn.close()
-
-init_database()
-
 # ---------------------------
 # Configuración de Flask
 # ---------------------------
 app = Flask(__name__)
 
+# La base de datos debe ser gestionada por cada hilo o proceso de forma independiente
+db_lock = threading.Lock()
+def get_db():
+    conn = sql.connect("database.db", check_same_thread=False)
+    conn.row_factory = sql.Row
+    return conn
+
+def init_database():
+    with db_lock:
+        with get_db() as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+            CREATE TABLE IF NOT EXISTS mediciones(
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                dispositivo TEXT,
+                temperatura REAL,
+                ph REAL,
+                turbidez REAL,
+                latitud REAL,
+                longitud REAL,
+                altitud REAL,
+                velocidad REAL,
+                timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+            )
+            """)
+            conn.commit()
+
+init_database()
+
+# ---------------------------
+# Configuración de MQTT
+# ---------------------------
+# El cliente MQTT debe ser global para ser accesible
+client = connect_mqtt()
+if client:
+    # Iniciar el bucle en un hilo separado para que no bloquee Flask
+    client.loop_start()
+else:
+    print("Error al conectarse con el broker MQTT. Las funcionalidades de control no estarán disponibles.")
+
+# ---------------------------
+# Rutas de la aplicación
+# ---------------------------
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -64,28 +70,18 @@ def datos():
 def control():
     return render_template('control.html')
 
-# ----------------------------------------------------
-# enviar datos a las gráficas
-# ----------------------------------------------------
 @app.route('/data')
 def get_data():
     try:
-        with db_lock:
-            conn = sql.connect("database.db")
-            conn.row_factory = sql.Row  # Permite acceder a los datos por nombre de columna
+        with get_db() as conn:
             cursor = conn.cursor()
-            
-            # Consulta para obtener el último registro insertado en la base de datos
             cursor.execute("""
-                SELECT temperatura, ph, turbidez, timestamp 
-                FROM mediciones 
+                SELECT temperatura, ph, turbidez, timestamp
+                FROM mediciones
                 ORDER BY id DESC LIMIT 1
             """)
             last_record = cursor.fetchone()
-            
-            conn.close()
-            
-            # Si hay datos, los enviamos como JSON. Si no, enviamos valores por defecto.
+
             if last_record:
                 data = {
                     "temperatura": last_record["temperatura"],
@@ -93,55 +89,46 @@ def get_data():
                     "turbidez": last_record["turbidez"]
                 }
             else:
-                # Valores por defecto si la base de datos está vacía
                 data = {
                     "temperatura": 0,
                     "ph": 0,
-                    "turbidez": 0,
-                    "timestamp": None
+                    "turbidez": 0
                 }
-        
-        return jsonify(data) # Convierte el diccionario de Python a una respuesta JSON
+        return jsonify(data)
     except Exception as e:
-        print(f"error fatal al conseguir los datos {e}")
-        return jsonify({"error":"Error al obtener los datos"})
+        print(f"Error al obtener los datos: {e}")
+        return jsonify({"error": "Error al obtener los datos"}), 500
 
-# ---------------------------
-# Servir archivos estáticos 
-# ---------------------------
-@app.route('/script.js')
-def controles_js():
-    return send_from_directory(os.path.join(app.root_path, 'static'), 'controles.js')
-
-# ---------------------------
-# Recibir comandos WASD 
-# ---------------------------
 @app.route('/control/<key>', methods=['POST'])
 def control_key(key):
     commands = {
-        "w":"adelante",
-        "s":"atras",
-        "a":"izquierda",
-        "d":"derecha",
-        "stop":"stop"
+        "w": "adelante",
+        "s": "atras",
+        "a": "izquierda",
+        "d": "derecha",
+        "stop": "stop"
     }
 
     command = commands.get(key.lower())
 
-    if command:
-        success = publish_message(topic_pub, command)
-        print(f"comando enviado: {command}")
-
-        return jsonify({
-            "status":"success" if success else "error",
-            "command": command,
-            "key": key
-        })
+    if client and client.is_connected():
+        if command:
+            success = publish_message(topic_pub, command)
+            print(f"Comando enviado: {command}")
+            return jsonify({
+                "status": "success" if success else "error",
+                "command": command,
+                "key": key
+            })
+        else:
+            publish_message(topic_pub, "stop")
+            print(f"Tecla desconocida: {key}, deteniendo")
+            return jsonify({"status": "unknown key", "key": key}), 400
     else:
-        publish_message(topic_pub, "stop")
-        print(f"tecla desconocida: {key}, deteniendo")
-        return jsonify({"status":"unknown key", "key": key}), 400
-    
+        return jsonify({
+            "status": "error",
+            "message": "Cliente MQTT no conectado"
+        }), 503
 
 @app.route('/status')
 def system_status():
@@ -162,9 +149,7 @@ def not_found(error):
 @app.errorhandler(500)
 def internal_error(error):
     return jsonify({"error": "Error interno del servidor"}), 500
-    
-# ---------------------------
-# Ejecutar servidor
-# ---------------------------
-if __name__ == "__main__":
-    app.run(debug=True)
+
+# Esta parte ya no se ejecuta con Waitress, pero es segura para desarrollo local
+# if __name__ == "__main__":
+#     app.run(debug=True)
