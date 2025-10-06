@@ -1,6 +1,7 @@
 # Importa jsonify para poder enviar respuestas en formato JSON
 from flask import Flask, render_template, send_from_directory, request, jsonify
 from mqtt import publish_message, topic_pub, connect_mqtt
+from datetime import datetime
 import paho.mqtt.client as mqtt
 import sqlite3 as sql
 import os
@@ -11,19 +12,33 @@ import threading
 # ---------------------------
 app = Flask(__name__)
 
+ultimo_dispositivo = None # Nombre del dispositivo 
+
+# Datos de los sensores 
+ultimo_temperatura = None
+ultimo_ph = None
+ultimo_turbidez = None
+
+# datos del GPS
+ultimo_latitud = None
+ultimo_longitud = None
+ultimo_altitud = None
+ultimo_velocidad = None
+
 # La base de datos debe ser gestionada por cada hilo o proceso de forma independiente
 db_lock = threading.Lock()
 def get_db():
-    conn = sql.connect("database.db", check_same_thread=False)
+    conn = sql.connect("datos_esp32.db", check_same_thread=False)
     conn.row_factory = sql.Row
     return conn
 
+# Iniciamos la base de datos, verifica que este creada y si no lo esta, la crea
 def init_database():
     with db_lock:
         with get_db() as conn:
             cursor = conn.cursor()
             cursor.execute("""
-            CREATE TABLE IF NOT EXISTS mediciones(
+            CREATE TABLE IF NOT EXISTS lecturas(
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 dispositivo TEXT,
                 temperatura REAL,
@@ -70,34 +85,83 @@ def datos():
 def control():
     return render_template('control.html')
 
-@app.route('/data')
-def get_data():
-    try:
-        with get_db() as conn:
-            cursor = conn.cursor()
-            cursor.execute("""
-                SELECT temperatura, ph, turbidez, timestamp
-                FROM mediciones
-                ORDER BY id DESC LIMIT 1
-            """)
-            last_record = cursor.fetchone()
+"""
+API de datos
+este apartado se encarga de recibir los datos del ESP32
+Esto es una REST API, la cual funciona a travez de datos en formato JSON
+"""
 
-            if last_record:
-                data = {
-                    "temperatura": last_record["temperatura"],
-                    "ph": last_record["ph"],
-                    "turbidez": last_record["turbidez"]
-                }
-            else:
-                data = {
-                    "temperatura": 0,
-                    "ph": 0,
-                    "turbidez": 0
-                }
-        return jsonify(data)
-    except Exception as e:
-        print(f"Error al obtener los datos: {e}")
-        return jsonify({"error": "Error al obtener los datos"}), 500
+@app.route('api/datos', methods=['POST'])
+def api_datos():
+    data = request.get_json() # convierte los datos del json a una variable
+
+    global dispositivo, temperatura, ph, turbidez #convetimos las variables en globales para poder utilizarlas en diferentes puntos
+    global latitud, longitud, altitud, velocidad
+
+    ultimo_dispositivo = data.get("dispositivo") # Nombre del dispositivo 
+
+    # Datos de los sensores 
+    ultimo_temperatura =data.get("temperatuar")
+    ultimo_ph = data.get("pH")
+    ultimo_turbidez = data.get("turbidez")
+
+    # datos del GPS
+    ultimo_latitud = data.get("latitud")
+    ultimo_longitud = data.get("longitud")
+    ultimo_altitud = data.get("altitud")
+    ultimo_velocidad = data.get("velocidad")
+
+    #enviamos los datos que recibimos del esp32 a la base de datos sqlite
+    conn = sql.connect("datos_esp32.db")
+    c = conn.cursor()
+    c.execute('''INSERT INTO lecturas
+              (dispositivo, temperatura, ph, turbidez, latitud, longitud, altitud, velocidad, timestemp)
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ''', 
+              (ultimo_dispositivo, ultimo_temperatura, ultimo_ph, ultimo_turbidez,
+               ultimo_longitud, ultimo_longitud, ultimo_altitud, ultimo_velocidad, datetime.now().isoformat())) 
+    conn.commit()
+    conn.close()
+
+    print(f"Los datos se han recibido, temperatura: {ultimo_temperatura}, ph:")
+    return jsonify({"ok": True}), 201
+
+@app.route('api/datos', methods = ['GET'])
+def obtener_datos():
+    conn = sql.connect('datos_esp32.db')
+    c = conn.cursor()
+    c.execute('SELECT * FROM lecturas ORDER BY id DESC LIMMIT 100')
+    rows = c.fetchall()
+    conn.close()
+
+    lecturas = []
+    for row in rows:
+        lecturas.append({
+            'id': row[0],
+            'dispositivo': row[1],
+            'temperatura': row[2],
+            'ph': row[3],
+            'turbidez': row[4],
+            'latitud': row[5],
+            'longitud': row[6], 
+            'altitud': row[7],
+            'velocidad': row[8],
+            'timestamp': row[9]
+        })
+
+    return jsonify(lecturas)
+
+@app.route('/api/ultimo', methods = ['GET'])
+def obtener_ultimo():
+    return jsonify({
+        'dispositivo': ultimo_dispositivo, 
+        'temperatura': ultimo_temperatura, 
+        'ph': ultimo_ph, 
+        'turbidez': ultimo_turbidez, 
+        'latitud': ultimo_latitud, 
+        'longitud': ultimo_longitud, 
+        'altitud': ultimo_altitud, 
+        'velocidad': ultimo_velocidad, 
+    })
 
 @app.route('/control/<key>', methods=['POST'])
 def control_key(key):
