@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // Obtener datos reales desde Flask cada 3 segundos
     setInterval(async () => {
         try {
-            const response = await fetch("/data");
+            const response = await fetch("api/datos");
             const data = await response.json();
 
             updateCharts(data.ph, data.turbidez, data.temperatura);
