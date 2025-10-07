@@ -91,17 +91,19 @@ este apartado se encarga de recibir los datos del ESP32
 Esto es una REST API, la cual funciona a travez de datos en formato JSON
 """
 
-@app.route('api/datos', methods=['POST'])
+@app.route('/api/datos', methods=['POST'])
 def api_datos():
     data = request.get_json() # convierte los datos del json a una variable
 
-    global dispositivo, temperatura, ph, turbidez #convetimos las variables en globales para poder utilizarlas en diferentes puntos
-    global latitud, longitud, altitud, velocidad
+    #convetimos las variables en globales para poder utilizarlas en diferentes puntos
+    global ultimo_dispositivo, ultimo_temperatura, ultimo_ph, ultimo_turbidez
+    global ultimo_latitud, ultimo_longitud, ultimo_altitud, ultimo_velocidad
 
-    ultimo_dispositivo = data.get("dispositivo") # Nombre del dispositivo 
+    # Nombre del dispositivo 
+    ultimo_dispositivo = data.get("dispositivo") 
 
     # Datos de los sensores 
-    ultimo_temperatura =data.get("temperatuar")
+    ultimo_temperatura =data.get("temperatura")
     ultimo_ph = data.get("pH")
     ultimo_turbidez = data.get("turbidez")
 
@@ -115,10 +117,10 @@ def api_datos():
     conn = sql.connect("datos_esp32.db")
     c = conn.cursor()
     c.execute('''INSERT INTO lecturas
-              (dispositivo, temperatura, ph, turbidez, latitud, longitud, altitud, velocidad, timestemp)
+              (dispositivo, temperatura, ph, turbidez, latitud, longitud, altitud, velocidad, timestamp)
               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ''', 
               (ultimo_dispositivo, ultimo_temperatura, ultimo_ph, ultimo_turbidez,
-               ultimo_longitud, ultimo_longitud, ultimo_altitud, ultimo_velocidad, datetime.now().isoformat())) 
+               ultimo_longitud, ultimo_latitud, ultimo_altitud, ultimo_velocidad, datetime.now().isoformat())) 
     conn.commit()
     conn.close()
 
@@ -127,11 +129,11 @@ def api_datos():
 
 @app.route('api/datos', methods = ['GET'])
 def obtener_datos():
-    conn = sql.connect('datos_esp32.db')
-    c = conn.cursor()
-    c.execute('SELECT * FROM lecturas ORDER BY id DESC LIMMIT 100')
-    rows = c.fetchall()
-    conn.close()
+    with db_lock:
+        with db_lock() as conn:
+            c = conn.cursor()
+            c.execute('SELECT * FROM lecturas ORDER BY id DESC LIMIT 100')
+            rows = c.fetchall()    
 
     lecturas = []
     for row in rows:
