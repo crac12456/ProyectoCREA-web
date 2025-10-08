@@ -34,8 +34,7 @@ def get_db():
 
 # Iniciamos la base de datos, verifica que este creada y si no lo esta, la crea
 def init_database():
-    with db_lock:
-        with get_db() as conn:
+    with get_db() as conn:
             cursor = conn.cursor()
             cursor.execute("""
             CREATE TABLE IF NOT EXISTS lecturas(
@@ -104,7 +103,7 @@ def api_datos():
 
     # Datos de los sensores 
     ultimo_temperatura =data.get("temperatura")
-    ultimo_ph = data.get("pH")
+    ultimo_ph = data.get("ph")
     ultimo_turbidez = data.get("turbidez")
 
     # datos del GPS
@@ -124,13 +123,13 @@ def api_datos():
     conn.commit()
     conn.close()
 
-    print(f"Los datos se han recibido, temperatura: {ultimo_temperatura}, ph:")
+    print(f"Los datos se han recibido, temperatura: {ultimo_temperatura}, ph: {ultimo_ph}, turbidez: {ultimo_turbidez}")
     return jsonify({"ok": True}), 201
 
 @app.route('/api/datos', methods = ['GET'])
 def obtener_datos():
     with db_lock:
-        with db_lock() as conn:
+        with get_db() as conn: 
             c = conn.cursor()
             c.execute('SELECT * FROM lecturas ORDER BY id DESC LIMIT 100')
             rows = c.fetchall()    
@@ -216,11 +215,5 @@ def not_found(error):
 def internal_error(error):
     return jsonify({"error": "Error interno del servidor"}), 500
 
-<<<<<<< HEAD
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=9000, debug=True)
-=======
-# Esta parte ya no se ejecuta con Waitress, pero es segura para desarrollo local
-# if __name__ == "__main__":
-#     app.run(debug=True)
->>>>>>> c3f70f6afa7d69d704fed649370cf4edf70a157c
