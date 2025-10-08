@@ -17,36 +17,46 @@ body.loaded {
 header {
   display: flex;
   align-items: center;
-  justify-content: center; /* centra todo inicialmente */
+  justify-content: space-between;
   padding: 15px 40px;
   flex-wrap: wrap;
-  background-color: #fbbc5d;
-  position: relative; /* necesario para posicionar el Tema */
+}
+.bordes {
+  align-items: center;
+  background-color: white;
+  margin: 30px auto;
+  padding: 30px;
+  max-width: 1000px;
+  width: 90%;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border-radius: 8px;
 }
 .logo {
   width: 70px;
   height: 70px;
-  position: absolute;
-  left: 40px;
 }
+
 .Tema {
   list-style: none;
   font-size: 32px;
   font-weight: bold;
   color: black;
+  margin-left: 250px;
   text-align: center;
-  position: relative; /* permanece en flujo para móviles */
-  z-index: 1;         /* sobre el fondo */
 }
+
+.left li {
+  margin-right: 0%;
+}
+
 .right {
   list-style: none;
   display: flex;
   gap: 15px;
-  position: absolute;
-  right: 40px;
   margin: 0;
   padding: 0;
 }
+
 .right li a {
   color: white;
   background-color: black;
@@ -54,7 +64,6 @@ header {
   border-radius: 6px;
   font-size: 18px;
   text-decoration: none;
-  transition: all 0.2s ease-in-out;
 }
 
 .right li a:hover {
@@ -73,7 +82,7 @@ header {
 }
 main {
   background-color: #3F84E5;
-  padding:30px 0;
+  padding: 30px 0;
 }
 .Robot_img1 {
   float: center;
@@ -81,7 +90,7 @@ main {
   border-radius: 5%;
   margin: 0% 1% 0% 1%;
   background-color: rgb(252, 252, 252);
-  margin-inline-start: 0%;
+  margin-inline-start: 35%;
   position: relative;
   max-width: 50%;
   height: auto;
@@ -111,7 +120,7 @@ main {
   border-radius: 5%;
   margin: 0% 1% 0% 1%;
   background-color: transparent;
-  margin-inline-start: 0%;
+  margin-inline-start: 35%;
   position: relative;
   max-width: 50%;
   height: auto;
@@ -131,7 +140,7 @@ main {
   margin-bottom: 20px;
   border: #e8e8e8;
 }
-.mapa iframe {
+.mapa {
   text-align: center;
   width: 100%;
   height: 700px; 
@@ -270,6 +279,7 @@ main {
 .chart-container canvas {
   width: 100% !important;
   height: 100% !important;
+  font: 20px;
 }
 footer {
   background-color: black;

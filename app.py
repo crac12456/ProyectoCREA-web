@@ -216,5 +216,11 @@ def not_found(error):
 def internal_error(error):
     return jsonify({"error": "Error interno del servidor"}), 500
 
+<<<<<<< HEAD
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=9000, debug=True)
+=======
+# Esta parte ya no se ejecuta con Waitress, pero es segura para desarrollo local
+# if __name__ == "__main__":
+#     app.run(debug=True)
+>>>>>>> c3f70f6afa7d69d704fed649370cf4edf70a157c
