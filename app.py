@@ -127,7 +127,7 @@ def api_datos():
     print(f"Los datos se han recibido, temperatura: {ultimo_temperatura}, ph:")
     return jsonify({"ok": True}), 201
 
-@app.route('api/datos', methods = ['GET'])
+@app.route('/api/datos', methods = ['GET'])
 def obtener_datos():
     with db_lock:
         with db_lock() as conn:
@@ -216,6 +216,5 @@ def not_found(error):
 def internal_error(error):
     return jsonify({"error": "Error interno del servidor"}), 500
 
-# Esta parte ya no se ejecuta con Waitress, pero es segura para desarrollo local
-# if __name__ == "__main__":
-#     app.run(debug=True)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=9000, debug=True)
