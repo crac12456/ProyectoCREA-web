@@ -25,6 +25,10 @@ ultimo_longitud = None
 ultimo_altitud = None
 ultimo_velocidad = None
 
+ultimo_frame = None
+frame_lock = threading.Lock()
+ultimo_frame_time = None
+
 # La base de datos debe ser gestionada por cada hilo o proceso de forma independiente
 db_lock = threading.Lock()
 def get_db():
@@ -207,6 +211,22 @@ def system_status():
             "subscribe": "esp32/robot/sensores"
         }
     })
+
+@app.route('/api/camara', methods=['POST'])
+def get_frame():
+    global ultimo_frame, ultimo_frame_time
+
+    # try:
+    #     image_data = request.data
+
+    #     if not image_data:
+    #         return {'error':'No recibio imagen'}
+        
+    #     with frame_lock:
+    #         ultimo_frame = image_data
+    #         ultimo_frame_time = datetime.now()
+
+
 
 @app.errorhandler(404)
 def not_found(error):
