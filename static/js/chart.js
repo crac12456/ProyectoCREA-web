@@ -23,14 +23,14 @@ document.addEventListener("DOMContentLoaded", function() {
             scales: {
                 x: { 
                     title: { display: true, text: 'Tiempo' } 
-                },
+                    },
                 y: { 
                     title: { display: true, text: label },
-                    min: 0, // Asegura que el eje empiece en 0
-                    // Lógica de escala correcta por sensor:
-                    max: label === 'Temperatura' ? 30 : (label === 'pH' ? 14 : 50) 
-                }
-            }
+                        min: label === 'Temperatura' ? 10 : 0, // 👈 Arranca en 10 si es temperatura
+                        max: label === 'Temperatura' ? 30 : (label === 'pH' ? 14 : 50)
+    }
+}
+
         }
     });
 
