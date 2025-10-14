@@ -216,17 +216,56 @@ def system_status():
 def get_frame():
     global ultimo_frame, ultimo_frame_time
 
-    # try:
-    #     image_data = request.data
+    try:
+        image_data = request.data
 
-    #     if not image_data:
-    #         return {'error':'No recibio imagen'}
+        if not image_data:
+            return {'error':'No recibio imagen'}
         
-    #     with frame_lock:
-    #         ultimo_frame = image_data
-    #         ultimo_frame_time = datetime.now()
+        with frame_lock:
+            ultimo_frame = image_data  
+            ultimo_frame_time = datetime.now()
 
+        print(f"Frame recibido {len(image_data)} bytes - {ultimo_frame_time.strftime('%H:%M:%S')}")
 
+        return {
+            'status' : 'correcto',
+            'mensaje' : 'Frame recibido correctamente',
+            'tamaño' : len(image_data),
+            'timestamp' : ultimo_frame_time.isoformat()
+        }, 200
+    
+    except Exception as e:
+        print(f"Error al recibir el frame: {e}")
+        return {'error': str (e)}, 500
+    
+@app.route('/api/ultimo_frame', methods=['GET'])
+def get_ultimo_frame():
+    from flask import Response
+
+    with frame_lock:
+        if ultimo_frame is not None:
+            return Response(ultimo_frame, mimetype='image/jpeg')
+        else:
+            return {'error': 'no hay frames que mostrar'}, 404
+        
+@app.route('/api/video_feed', methods=['GET'])
+def video_feed():
+    from flask import Response
+
+    import time 
+
+    def generate():
+        while True:
+            with frame_lock:
+                if ultimo_frame is not None:
+                    yield (b'--frame\r\n'
+                           b'Content-Type: image/jpeg\r\n\r\n' + ultimo_frame + b'\r\n')
+                else: 
+                    time.sleep(0.1)
+
+    return Response(generate(),
+                    mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.errorhandler(404)
 def not_found(error):
