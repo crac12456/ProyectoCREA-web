@@ -22,11 +22,7 @@
 </script>
   <body>
     <header>
-      <img
-        class="logo"
-        src="/"
-        alt="logo"
-      />
+      <img class="logo" src="{{ url_for('static', filename='img/Logo_CREA.png') }}" alt="logo">
       <ul class="Tema">
         <li>Smart Blue Sentinel</li>
       </ul>
@@ -39,20 +35,7 @@
     </header>
     <main>
       <div class="bordes">
-        <img class="testcam" src="{{ url_for('static', filename='img/camtest1.png') }}" alt="camara test"/>
-      <div class="control-container">
-        <div class="control-row">
-          <button class="btn-control up" data-key="w">▲</button>
-        </div>
-        <div class="control-row">
-          <button class="btn-control left" data-key="a">◀</button>
-          <button class="btn-control center" data-key=" ">●</button>
-          <button class="btn-control right" data-key="d">▶</button>
-        </div>
-        <div class="control-row">
-          <button class="btn-control down" data-key="s">▼</button>
-        </div>
-      </div>
+        <img src= "//api/video_feed" width="960" height="560">
         </div>
       </div>
     </main>
