@@ -23,14 +23,13 @@ document.addEventListener("DOMContentLoaded", function() {
             scales: {
                 x: { 
                     title: { display: true, text: 'Tiempo' } 
-                    },
+                },
                 y: { 
                     title: { display: true, text: label },
-                        min: label === 'Temperatura' ? 10 : 0, // 👈 Arranca en 10 si es temperatura
-                        max: label === 'Temperatura' ? 30 : (label === 'pH' ? 14 : 50)
-    }
-}
-
+                    min: label === 'Temperatura' ? 10 : (label === 'pH' ? 4 : 0),
+                    max: label === 'Temperatura' ? 30 : (label === 'pH' ? 12 : 50)
+                }
+            }
         }
     });
 
@@ -39,22 +38,18 @@ document.addEventListener("DOMContentLoaded", function() {
     const turbidezChart = new Chart(document.getElementById('turbidezChart'), createConfig('Turbidez', turbidezData, 'blue'));
     const tempChart = new Chart(document.getElementById('tempChart'), createConfig('Temperatura', tempData, 'green'));
 
-    // Función para actualizar valores y gráficos
-    // CORRECCIÓN: Los argumentos son ahora 'ph', 'turbidez', 'temp'
     function updateCharts(ph, turbidez, temp) {
         const time = new Date().toLocaleTimeString();
         labels.push(time);
-        
-        // Uso de valores con fallback a 0 y redondeo a 2 decimales
+
         const safePh = (ph === null || ph === undefined) ? 0 : parseFloat(ph);
         const safeTurbidez = (turbidez === null || turbidez === undefined) ? 0 : parseFloat(turbidez);
         const safeTemp = (temp === null || temp === undefined) ? 0 : parseFloat(temp);
-        
+
         phData.push(safePh);
         turbidezData.push(safeTurbidez);
         tempData.push(safeTemp);
 
-        // Mantener últimos 20 puntos
         if (labels.length > 20) {
             labels.shift();
             phData.shift();
@@ -62,7 +57,6 @@ document.addEventListener("DOMContentLoaded", function() {
             tempData.shift();
         }
 
-        // Actualizar <li> con valores
         document.getElementById('phValue').textContent = safePh.toFixed(2);
         document.getElementById('turbidezValue').textContent = safeTurbidez.toFixed(2);
         document.getElementById('tempValue').textContent = safeTemp.toFixed(2);
@@ -71,15 +65,29 @@ document.addEventListener("DOMContentLoaded", function() {
         turbidezChart.update();
         tempChart.update();
     }
-    
-    // Nueva función para actualizar la tabla histórica (usa /api/datos)
+
+    // 🔹 Simulación mejorada de pH (más natural)
+    let simularPH = true; // Cambia a false si conectas el sensor real
+    let phSimulado = 7.0; // Valor base
+    function obtenerPHSimulado() {
+        // Pequeñas variaciones aleatorias suaves (sube o baja ligeramente)
+        let cambio = (Math.random() - 0.5) * 0.1; // ±0.05 aprox
+        phSimulado += cambio;
+
+        // Limitar entre 6.5 y 8.0
+        if (phSimulado > 8.0) phSimulado = 8.0;
+        if (phSimulado < 6.5) phSimulado = 6.5;
+
+        return phSimulado.toFixed(2);
+    }
+
     async function updateTable() {
         try {
-            const response = await fetch("api/datos"); // Obtiene los 100 registros
+            const response = await fetch("api/datos");
             const data = await response.json();
             const tbody = document.querySelector('#datosHistoricosTable tbody');
             
-            if (tbody) { // Solo si la tabla existe en el HTML
+            if (tbody) {
                 tbody.innerHTML = ''; 
                 data.slice(0, 10).forEach(row => {
                     const tr = document.createElement('tr');
@@ -102,21 +110,22 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-
-    // Obtener datos reales desde Flask cada 3 segundos (ACTUALIZACIÓN DE GRÁFICAS)
+    // 🔹 Actualización de gráficos en vivo
     setInterval(async () => {
         try {
-            const response = await fetch("api/ultimo"); // Correcto: Trae el último dato
+            const response = await fetch("api/ultimo");
             const data = await response.json();
 
-            // CORRECCIÓN CRÍTICA: Usar data.ph, data.turbidez, data.temperatura
-            updateCharts(data.ph, data.turbidez, data.temperatura);
+            // Si simulamos, solo el pH se reemplaza por el simulado
+            const phReal = simularPH ? obtenerPHSimulado() : data.ph;
+
+            updateCharts(phReal, data.turbidez, data.temperatura);
         } catch (error) {
             console.error("Error obteniendo datos en vivo:", error);
         }
     }, 2000);
-    
-    // Llamadas a la tabla histórica
+
+    // 🔹 Actualización periódica de tabla
     setInterval(updateTable, 10000);
     updateTable(); // Llamada inicial
 });
