@@ -7,12 +7,12 @@
 }
 body {
   background-color: black;
-  background: #3F84E5;
+  background: #3f84e5;
   opacity: 0;
   transition: opacity 0.8s ease-in-out;
 }
 body.loaded {
-  opacity: 1;  /* cuando agregamos la clase loaded → aparece */
+  opacity: 1; /* cuando agregamos la clase loaded → aparece */
 }
 header {
   display: flex;
@@ -29,7 +29,7 @@ header {
   padding: 30px;
   max-width: 1000px;
   width: 90%;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
 }
 .logo {
@@ -78,11 +78,11 @@ header {
   padding: 30px;
   max-width: 1500px;
   width: 90%;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
 }
 main {
-  background-color: #3F84E5;
+  background-color: #3f84e5;
   padding: 30px 0;
 }
 .Robot_img1 {
@@ -98,16 +98,18 @@ main {
   margin-bottom: 20px;
   border: #e8e8e8;
 }
-.quesomos, .Nuestro_proyecto, .desarrollo_proyecto, .importancia {
+.quesomos,
+.Nuestro_proyecto,
+.desarrollo_proyecto,
+.importancia {
   text-align: center;
   font-size: 40px;
   margin: 15px 0 15px 0;
 }
-.galeria {
-  font-size: 40px;
-  padding: 0%;
-}
-.quesomos_texto, .proyecto_texto, .desarrollo_texto, .importancia_texto {
+.quesomos_texto,
+.proyecto_texto,
+.desarrollo_texto,
+.importancia_texto {
   font-size: 30px;
   text-align: justify;
   line-height: 1.6;
@@ -128,7 +130,8 @@ main {
   margin-bottom: 20px;
   border: #e8e8e8;
 }
-.Robot_img3, .Robot_img4 {
+.Robot_img3,
+.Robot_img4 {
   float: center;
   width: 30%;
   border-radius: 5%;
@@ -144,9 +147,9 @@ main {
 .mapa iframe {
   text-align: center;
   width: 100%;
-  height: 700px; 
+  height: 700px;
   border: none;
-  border-radius: 10px; 
+  border-radius: 10px;
 }
 .Datos {
   font: 30px;
@@ -184,20 +187,55 @@ main {
   position: relative;
   aspect-ratio: 16 / 9; /* mantiene proporción 16:9 */
 }
-.img1, .img2, .img3, .img4, .img5 {
+.img1,
+.img2,
+.img3,
+.img4,
+.img5 {
   width: 40%;
-}
-/*.galeria_container {
-  width: 40%;
-  height: 100%;
-  max-width: 100px;
-  padding: 0%;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: 250px;
-  grid-gap: 20px;
 }
 
+/* Carrusel de 3 imágenes */
+.carousel-multi {
+    position: relative;
+    width: 90%;
+    max-width: 900px;
+    margin: 40px auto;
+    overflow: hidden;
+}
+
+.carousel-track-multi {
+    display: flex;
+    gap: 15px;
+    transition: transform 0.4s ease;
+    overflow: visible;
+}
+
+.carousel-track-multi img {
+    width: 80%;              /* 3 imágenes visibles */
+    height: 500px;           /* tamaño más pequeño */
+    object-fit: cover;       /* NO estira ni deforma */
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+/* Botones */
+.cbtn {
+    z-index: 10;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.5);
+    color: white;
+    border: none;
+    padding: 10px 14px;
+    font-size: 24px;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.cbtn.prev { left: 5px; }
+.cbtn.next { right: 5px; }
 /* Canvas ocupa todo el contenedor */
 .chart-container canvas {
   width: 100% !important;
@@ -225,7 +263,7 @@ footer {
   .right {
     position: static; /* vuelve al flujo normal */
     flex-direction: row; /* horizontal */
-    flex-wrap: wrap;     /* permite que los botones bajen si no caben */
+    flex-wrap: wrap; /* permite que los botones bajen si no caben */
     justify-content: center;
     gap: 8px;
     margin-top: 10px;
@@ -250,7 +288,10 @@ footer {
   .robot-img2 {
     width: 100%;
   }
-  .quesomos, .Nuestro_proyecto, .desarrollo_proyecto, .importancia {
+  .quesomos,
+  .Nuestro_proyecto,
+  .desarrollo_proyecto,
+  .importancia {
     font-size: 30px;
   }
   .bordes {
@@ -258,51 +299,59 @@ footer {
     width: 95%;
   }
   .control-container {
-        font-size: 16px;
-        padding: 10px;
-    }
+    font-size: 16px;
+    padding: 10px;
+  }
   .mapa iframe {
     height: 300px;
   }
 }
-  .Datos {
-    font-size: 24px;
-  }
-  .datosrobot li {
-    font-size: 18px;
-    margin-bottom: 8px;
-  }
-  .chart-container {
-    width: 95%;
-    max-width: 100%;
-  }
+.Datos {
+  font-size: 24px;
+}
+.datosrobot li {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+.chart-container {
+  width: 95%;
+  max-width: 100%;
+}
 
-  .Datos {
-    font-size: 40px;
-  }
+.Datos {
+  font-size: 40px;
+}
 
-  .datosrobot li {
-    font-size: 18px;
-    margin-bottom: 8px;
-  }
+.datosrobot li {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
 
-  .pH, .Turbidez, .Temperatura {
-    font-size: 30px;
-    text-align: center;
-    margin-top: 15px;
-    margin-bottom: 5px;
-  }
-    .Robot_img1, .Robot_img2, .Robot_img3, .Robot_img4 {
-    float: none; 
-    width: 90%; 
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
-  }
+.pH,
+.Turbidez,
+.Temperatura {
+  font-size: 30px;
+  text-align: center;
+  margin-top: 15px;
+  margin-bottom: 5px;
+}
+.Robot_img1,
+.Robot_img2,
+.Robot_img3,
+.Robot_img4 {
+  float: none;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
 
-  .quesomos_texto, .proyecto_texto, .desarrollo_texto, .importancia_texto {
-    font-size: 25px;
-    float: none; 
-    text-align: justify;
-    padding: 0 10px;
-  } 
+.quesomos_texto,
+.proyecto_texto,
+.desarrollo_texto,
+.importancia_texto {
+  font-size: 25px;
+  float: none;
+  text-align: justify;
+  padding: 0 10px;
+}

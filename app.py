@@ -88,6 +88,10 @@ def datos():
 def control():
     return render_template('control.html')
 
+@app.route('/admin')
+def admin():
+    return render_template('admin.html')
+
 """
 API de datos
 este apartado se encarga de recibir los datos del ESP32

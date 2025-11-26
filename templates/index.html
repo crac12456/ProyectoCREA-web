@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Proyecto CREA</title>
+  <title>SMART BLUE SENTINEL</title>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
   <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
   <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/CREA.ico') }}">
@@ -25,6 +25,7 @@
     <li><a href="{{ url_for('control') }}">Control</a></li>
     <li><a href="{{ url_for('gps') }}">GPS</a></li>
     <li><a href="{{ url_for('datos') }}">Datos</a></li>
+    <li><a href="{{ url_for('admin') }}">Admin</a></li>
   </ul>
 </header>
   <main>
@@ -32,7 +33,7 @@
       <h1 class="quesomos">¿Quiénes Somos?</h1>
       <img class="Robot_img1" src="{{ url_for('static', filename='img/grupo.jpeg') }}" alt="Robot Proyecto CREA">
   <p class="quesomos_texto">    
-      Somos un grupo de jóvenes estudiantes del Tercer Año de Bachillerato de la Unidad Educativa Particular "Siete de Mayo", motivados por el deseo de generar un impacto positivo en nuestro entorno a través de la tecnología y el conocimiento. Nos caracteriza el compromiso, la creatividad y la vocación por resolver problemáticas reales mediante soluciones prácticas e innovadoras. Nos encontramos participando en el concurso "Proyecto CREA", una iniciativa que promueve la investigación, la robótica y el desarrollo de proyectos con enfoque científico y ambiental. Esta experiencia representa para nosotros una oportunidad no solo de aplicar lo aprendido en el aula, sino también de trabajar en equipo, asumir nuevos retos y demostrar que los jóvenes podemos ser agentes de cambio cuando se nos brinda el espacio y las herramientas adecuadas.
+      Somos un grupo de jóvenes estudiantes del Tercer Año de Bachillerato de la Unidad Educativa Particular "Siete de Mayo", motivados por el deseo de generar un impacto positivo en nuestro entorno a través de la tecnología y el conocimiento. Nos caracteriza el compromiso, la creatividad y la vocación por resolver problemáticas reales mediante soluciones prácticas e innovadoras. Nos encontramos participando en la IV Feria de Proyectos Innovadores, una iniciativa que promueve la investigación, la robótica y el desarrollo de proyectos con enfoque científico y ambiental. Esta experiencia representa para nosotros una oportunidad no solo de aplicar lo aprendido en el aula, sino también de trabajar en equipo, asumir nuevos retos y demostrar que los jóvenes podemos ser agentes de cambio cuando se nos brinda el espacio y las herramientas adecuadas.
   </p>
   <h1 class="Nuestro_proyecto">Nuestro Proyecto</h1>
   <img class="Robot_img2" src="{{ url_for('static', filename='img//robot6.jpeg') }}" alt="Robot Proyecto CREA2">
@@ -55,18 +56,27 @@
   
 
   <h1 class="galeria">Galería</h1>
-  <div class="galeria_container">
+<div class="carousel-multi">
+    <!-- Flecha izquierda -->
+    <button class="cbtn prev">&#10094;</button>
+
+    <div class="carousel-track-multi">
+        <img src="{{ url_for('static', filename='img/robot3.jpeg') }}" alt="img1">
+        <img src="{{ url_for('static', filename='img/proceso1.jpeg') }}" alt="img2">
+        <img src="{{ url_for('static', filename='img/robot1.jfif') }}" alt="img3">
+        <img src="{{ url_for('static', filename='img/robot4.jpeg') }}" alt="img4">
+        <img src="{{ url_for('static', filename='img/robot5.jpeg') }}" alt="img5">
     </div>
-      <img class="img1" src="{{ url_for('static', filename='img/robot3.jpeg') }}" alt="Imagen 1">
-      <img class="img2" src="{{ url_for('static', filename='img/proceso1.jpeg') }}" alt="Imagen 2">
-      <img class="img3" src="{{ url_for('static', filename='img/robot1.jfif') }}" alt="Imagen 3">
-      <img class="img4" src="{{ url_for('static', filename='img/robot4.jpeg') }}" alt="Imagen 4">
-      <img class="img5" src="{{ url_for('static', filename='img/robot5.jpeg') }}" alt="Imagen 5">
+
+    <!-- Flecha derecha (agregada) -->
+    <button class="cbtn next">&#10095;</button>
+</div>
+      
 
   </div>
 </main>
 </body>
 <footer>
-  <p>Unidad Educativa Particular Siete de Mayo - Proyecto CREA &copy; 2025-2026</p>
+  <p>Unidad Educativa Particular Siete de Mayo - IV Feria Proyectos Innovadores Zona 7 &copy; 2025-2026</p>
 </footer>
 </html>

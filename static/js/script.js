@@ -51,3 +51,28 @@ document.querySelectorAll(".btn-control").forEach(btn => {
         setTimeout(() => this.classList.remove("active"), 200);
     });
 });
+document.addEventListener("DOMContentLoaded", () => {
+    const track = document.querySelector(".carousel-track-multi");
+    const images = document.querySelectorAll(".carousel-track-multi img");
+
+    let index = 0;
+    const visible = 3;              // cantidad de imágenes visibles a la vez
+    const total = images.length;
+
+    function update() {
+        const imgWidth = images[0].clientWidth + 15; // ancho + gap
+        track.style.transform = `translateX(${-index * imgWidth}px)`;
+    }
+
+    document.querySelector(".cbtn.next").addEventListener("click", () => {
+        if (index < total - visible) index++;
+        update();
+    });
+
+    document.querySelector(".cbtn.prev").addEventListener("click", () => {
+        if (index > 0) index--;
+        update();
+    });
+
+    window.addEventListener("resize", update);
+});
