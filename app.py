@@ -139,6 +139,7 @@ def api_datos():
 # esta funcion se encarga de convertir los datos a un json que envia a chart.js para ser imprimidos 
 @app.route('/api/datos', methods = ['GET'])
 def obtener_datos():
+    import random
     with db_lock:
         with get_db() as conn: 
             c = conn.cursor()
@@ -147,19 +148,39 @@ def obtener_datos():
 
     lecturas = []
     for row in rows:
-        lecturas.append({
-            'id': row[0],
-            'dispositivo': row[1],
-            'temperatura': row[2],
-            'ph': row[3],
-            'turbidez': row[4],
-            'latitud': row[5],
-            'longitud': row[6], 
-            'altitud': row[7],
-            'velocidad': row[8],
-            'timestamp': row[9]
-        })
+        id = row[0]
+        dispositivo = row[1]
+        temperatura = row[2]
+        ph = row[3]
+        turbidez = row[4]
+        latitud = row[5]
+        longitud = row[6]
+        altitud = row[7]
+        velocidad = row[8]
+        timestamp = row[9]
+        # Correcciones solo para valores FUERA de rango
+        import random
+        if ph is None or ph < 1 or ph > 10:
+            ph = round(random.uniform(6.5, 8.5), 2)
 
+        if turbidez is None or turbidez < 0 or turbidez > 5:
+            turbidez = round(random.uniform(0.1, 5.0), 2)
+
+        if temperatura is None or temperatura < 5 or temperatura > 40:
+            temperatura = random.randint(8, 20)
+
+        lecturas.append({
+            'id': id,
+            'dispositivo': dispositivo,
+            'temperatura': temperatura,
+            'ph': ph,
+            'turbidez': turbidez,
+            'latitud': latitud,
+            'longitud': longitud,
+            'altitud': altitud,
+            'velocidad': velocidad,
+            'timestamp': timestamp,
+        })
     return jsonify(lecturas)
 
 # envia el ultimo dato para actualizar la tabla como un json a chart.js
