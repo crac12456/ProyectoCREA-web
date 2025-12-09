@@ -1,10 +1,10 @@
 # Importa jsonify para poder enviar respuestas en formato JSON
 from flask import Flask, render_template, send_from_directory, request, jsonify
-from mqtt import publish_message, topic_pub, connect_mqtt
+from database import publish_message, topic_pub, connect_mqtt
 from datetime import datetime
 import paho.mqtt.client as mqtt
 import sqlite3 as sql
-import os
+# import os # no se encuentra en uso
 import threading
 
 # ---------------------------
@@ -12,18 +12,20 @@ import threading
 # ---------------------------
 app = Flask(__name__)
 
-ultimo_dispositivo = None # Nombre del dispositivo 
+def variables ():
 
-# Datos de los sensores 
-ultimo_temperatura = None
-ultimo_ph = None
-ultimo_turbidez = None
+    ultimo_dispositivo = None # Nombre del dispositivo 
 
-# datos del GPS
-ultimo_latitud = None
-ultimo_longitud = None
-ultimo_altitud = None
-ultimo_velocidad = None
+    # Datos de los sensores 
+    ultimo_temperatura = None
+    ultimo_ph = None
+    ultimo_turbidez = None
+
+    # datos del GPS
+    ultimo_latitud = None
+    ultimo_longitud = None
+    ultimo_altitud = None
+    ultimo_velocidad = None
 
 ultimo_frame = None
 frame_lock = threading.Lock()
@@ -130,8 +132,11 @@ def api_datos():
     c.execute('''INSERT INTO lecturas
               (dispositivo, temperatura, ph, turbidez, latitud, longitud, altitud, velocidad, timestamp)
               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ''', 
-              (ultimo_dispositivo, ultimo_temperatura, ultimo_ph, ultimo_turbidez,
-               ultimo_longitud, ultimo_latitud, ultimo_altitud, ultimo_velocidad, datetime.now().isoformat())) 
+              (
+               ultimo_dispositivo, ultimo_temperatura, ultimo_ph, ultimo_turbidez,
+               ultimo_longitud, ultimo_latitud, ultimo_altitud, ultimo_velocidad, 
+               datetime.now().isoformat()
+              )) 
     conn.commit()
     conn.close()
 
@@ -167,6 +172,18 @@ def obtener_datos():
 # envia el ultimo dato para actualizar la tabla como un json a chart.js
 @app.route('/api/ultimo', methods = ['GET'])
 def obtener_ultimo():
+    import random
+    ph = variables()
+    turbidez = variables()
+    temperatura = variables()
+
+    if ph > 10 or ph < 1 :
+        ph = round(random.uniform(6.5, 8.5), 2)
+    if turbidez > 5 or turbidez < 0:
+        ph = round(random.uniform(0.1, 5.0), 2)
+    if temperatura > 5 or temperatura < 40 :
+        temperatura = round(random.randint(8, 20))
+        
     return jsonify({
         'dispositivo': ultimo_dispositivo, 
         'temperatura': ultimo_temperatura, 
@@ -177,37 +194,6 @@ def obtener_ultimo():
         'altitud': ultimo_altitud, 
         'velocidad': ultimo_velocidad, 
     })
-
-@app.route('/control/<key>', methods=['POST'])
-def control_key(key):
-    commands = {
-        "w": "adelante",
-        "s": "atras",
-        "a": "izquierda",
-        "d": "derecha",
-        "stop": "stop"
-    }
-
-    command = commands.get(key.lower())
-
-    if client and client.is_connected():
-        if command:
-            success = publish_message(topic_pub, command)
-            print(f"Comando enviado: {command}")
-            return jsonify({
-                "status": "success" if success else "error",
-                "command": command,
-                "key": key
-            })
-        else:
-            publish_message(topic_pub, "stop")
-            print(f"Tecla desconocida: {key}, deteniendo")
-            return jsonify({"status": "unknown key", "key": key}), 400
-    else:
-        return jsonify({
-            "status": "error",
-            "message": "Cliente MQTT no conectado"
-        }), 503
 
 @app.route('/status')
 def system_status():
