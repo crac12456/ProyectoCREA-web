@@ -1,6 +1,6 @@
 # Importa jsonify para poder enviar respuestas en formato JSON
 from flask import Flask, render_template, send_from_directory, request, jsonify
-from database import publish_message, topic_pub, connect_mqtt
+#from database import publish_message, topic_pub
 from datetime import datetime
 import paho.mqtt.client as mqtt
 import sqlite3 as sql
@@ -12,20 +12,19 @@ import threading
 # ---------------------------
 app = Flask(__name__)
 
-def variables ():
 
-    ultimo_dispositivo = None # Nombre del dispositivo 
+ultimo_dispositivo = None # Nombre del dispositivo 
 
-    # Datos de los sensores 
-    ultimo_temperatura = None
-    ultimo_ph = None
-    ultimo_turbidez = None
+# Datos de los sensores 
+ultimo_temperatura = None
+ultimo_ph = None
+ultimo_turbidez = None
 
-    # datos del GPS
-    ultimo_latitud = None
-    ultimo_longitud = None
-    ultimo_altitud = None
-    ultimo_velocidad = None
+# datos del GPS
+ultimo_latitud = None
+ultimo_longitud = None
+ultimo_altitud = None
+ultimo_velocidad = None
 
 ultimo_frame = None
 frame_lock = threading.Lock()
@@ -64,12 +63,6 @@ init_database()
 # Configuración de MQTT
 # ---------------------------
 # El cliente MQTT debe ser global para ser accesible
-client = connect_mqtt()
-if client:
-    # Iniciar el bucle en un hilo separado para que no bloquee Flask
-    client.loop_start()
-else:
-    print("Error al conectarse con el broker MQTT. Las funcionalidades de control no estarán disponibles.")
 
 # ---------------------------
 # Rutas de la aplicación
@@ -134,7 +127,7 @@ def api_datos():
               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ''', 
               (
                ultimo_dispositivo, ultimo_temperatura, ultimo_ph, ultimo_turbidez,
-               ultimo_longitud, ultimo_latitud, ultimo_altitud, ultimo_velocidad, 
+               ultimo_latitud, ultimo_longitud, ultimo_altitud, ultimo_velocidad, 
                datetime.now().isoformat()
               )) 
     conn.commit()
@@ -170,42 +163,40 @@ def obtener_datos():
     return jsonify(lecturas)
 
 # envia el ultimo dato para actualizar la tabla como un json a chart.js
-@app.route('/api/ultimo', methods = ['GET'])
-def obtener_ultimo():
-    import random
-    ph = variables()
-    turbidez = variables()
-    temperatura = variables()
+# @app.route('/api/ultimo', methods = ['GET'])
+# def obtener_ultimo():
+#     import random
+#     global ultimo_ph, ultimo_turbidez, ultimo_temperatura
 
-    if ph > 10 or ph < 1 :
-        ph = round(random.uniform(6.5, 8.5), 2)
-    if turbidez > 5 or turbidez < 0:
-        ph = round(random.uniform(0.1, 5.0), 2)
-    if temperatura > 5 or temperatura < 40 :
-        temperatura = round(random.randint(8, 20))
+#     if ultimo_ph > 10 or ultimo_ph < 1 :
+#         ultimo_ph = round(random.uniform(6.5, 8.5), 2)
+#     if ultimo_turbidez > 5 or ultimo_turbidez < 0:
+#         ultimo_turbidez = round(random.uniform(0.1, 5.0), 2)
+#     if ultimo_temperatura < 5 or ultimo_temperatura > 40 :
+#         ultimo_temperatura = round(random.randint(8, 20))
         
-    return jsonify({
-        'dispositivo': ultimo_dispositivo, 
-        'temperatura': ultimo_temperatura, 
-        'ph': ultimo_ph, 
-        'turbidez': ultimo_turbidez, 
-        'latitud': ultimo_latitud, 
-        'longitud': ultimo_longitud, 
-        'altitud': ultimo_altitud, 
-        'velocidad': ultimo_velocidad, 
-    })
+#     return jsonify({
+#         'dispositivo': ultimo_dispositivo, 
+#         'temperatura': ultimo_temperatura, 
+#         'ph': ultimo_ph, 
+#         'turbidez': ultimo_turbidez, 
+#         'latitud': ultimo_latitud, 
+#         'longitud': ultimo_longitud, 
+#         'altitud': ultimo_altitud, 
+#         'velocidad': ultimo_velocidad, 
+#     })
 
-@app.route('/status')
-def system_status():
-    return jsonify({
-        "mqtt_connected": client is not None and client.is_connected() if client else False,
-        "broker": "localhost",
-        "port": 1883,
-        "topics": {
-            "publish": topic_pub,
-            "subscribe": "esp32/robot/sensores"
-        }
-    })
+# @app.route('/status')
+# def system_status():
+#     return jsonify({
+#         "mqtt_connected": client is not None and client.is_connected() if client else False,
+#         "broker": "localhost",
+#         "port": 1883,
+#         "topics": {
+#             "publish": topic_pub,
+#             "subscribe": "esp32/robot/sensores"
+#         }
+#     })
 
 @app.route('/api/camara', methods=['POST'])
 def get_frame():
