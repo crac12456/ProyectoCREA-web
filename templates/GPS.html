@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proyecto CREA</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+  <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/CREA.ico') }}">
+</head>
+<script>
+  window.addEventListener("load", function() {
+    document.body.classList.add("loaded");
+  });
+</script>
+<body>
+<header>
+  <img class="logo" src="{{ url_for('static', filename='img/Logo_CREA.png') }}" alt="logo">
+  <ul class="Tema">
+    <li>Smart Blue Sentinel</li>
+  </ul>
+  <ul class="right">
+    <li><a href="{{ url_for('index') }}">Inicio</a></li>
+    <li><a href="{{ url_for('control') }}">Control</a></li>
+    <li><a href="{{ url_for('gps') }}">GPS</a></li>
+    <li><a href="{{ url_for('datos') }}">Datos</a></li>
+  </ul>
+</header>
+  <main>
+  <div class="bordes">
+      <div class="mapa">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3983.3858067073943!2d-79.97707522506471!3d-3.2539418967210954!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x90330efb45547555%3A0xf3337825bf0cd552!2sUnidad%20Educativa%20Particular%20Siete%20de%20Mayo!5e0!3m2!1ses!2sec!4v1753206077255!5m2!1ses!2sec"
+        ></iframe>
+      </div>
+    </div>
+</main>
+</body>
+<footer>
+  <p>Unidad Educativa Particular Siete de Mayo - Proyecto CREA &copy; 2025-2026</p>
+</footer>
+</html>

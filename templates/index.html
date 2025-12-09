@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proyecto CREA</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+  <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/CREA.ico') }}">
+
+</head>
+<script>
+  window.addEventListener("load", function() {
+    document.body.classList.add("loaded");
+  });
+</script>
+<body>
+<header>
+  <img class="logo" src="{{ url_for('static', filename='img/Logo_CREA.png') }}" alt="logo">
+  <ul class="Tema">
+    <li>Smart Blue Sentinel</li>
+  </ul>
+  <ul class="right">
+    <li><a href="{{ url_for('index') }}">Inicio</a></li>
+    <li><a href="{{ url_for('control') }}">Control</a></li>
+    <li><a href="{{ url_for('gps') }}">GPS</a></li>
+    <li><a href="{{ url_for('datos') }}">Datos</a></li>
+  </ul>
+</header>
+  <main>
+  <div class="bordes">
+      <h1 class="quesomos">¿Quiénes Somos?</h1>
+      <img class="Robot_img1" src="{{ url_for('static', filename='img/grupo.jpeg') }}" alt="Robot Proyecto CREA">
+  <p class="quesomos_texto">    
+      Somos un grupo de jóvenes estudiantes del Tercer Año de Bachillerato de la Unidad Educativa Particular "Siete de Mayo", motivados por el deseo de generar un impacto positivo en nuestro entorno a través de la tecnología y el conocimiento. Nos caracteriza el compromiso, la creatividad y la vocación por resolver problemáticas reales mediante soluciones prácticas e innovadoras. Nos encontramos participando en el concurso "Proyecto CREA", una iniciativa que promueve la investigación, la robótica y el desarrollo de proyectos con enfoque científico y ambiental. Esta experiencia representa para nosotros una oportunidad no solo de aplicar lo aprendido en el aula, sino también de trabajar en equipo, asumir nuevos retos y demostrar que los jóvenes podemos ser agentes de cambio cuando se nos brinda el espacio y las herramientas adecuadas.
+  </p>
+  <h1 class="Nuestro_proyecto">Nuestro Proyecto</h1>
+  <img class="Robot_img2" src="{{ url_for('static', filename='img//robot6.jpeg') }}" alt="Robot Proyecto CREA2">
+  <p class="proyecto_texto">
+    En un mundo donde el acceso al agua limpia se vuelve cada vez más crítico, nuestro proyecto nace con una meta clara: construir un robot capaz de contribuir activamente al cuidado de nuestros cuerpos hídricos. Este sistema autónomo, equipado con una red recolectora de residuos y sensores para medir pH, temperatura y turbidez, no solo limpia físicamente el agua, sino que también recolecta información útil para su monitoreo y conservación. Creemos que la tecnología debe estar al servicio de la vida, y por eso diseñamos una solución práctica, educativa y replicable. Este robot no solo limpia, también educa y concientiza, demostrando que la innovación puede ser aliada del medioambiente. Con este proyecto, buscamos inspirar nuevas formas de proteger el recurso más valioso del planeta: el agua.
+  </p>
+
+  <h1 class="desarrollo_proyecto">Desarrollo del Proyecto</h1>
+    <img class="Robot_img3" src="{{ url_for('static', filename='img/proceso5.jpeg') }}" alt="Desarrollo del Proyecto">
+  <p class="desarrollo_texto">
+    Para construir el "Smart Blue Sentinel", combinamos varias tecnologías de manera sencilla. El cerebro de nuestro robot es una placa de desarrollo, que se encarga de procesar toda la información. Esta placa se conecta a varios sensores, como el sensor de pH, el sensor de temperatura y el sensor de turbidez, que son los encargados de "sentir" el estado del agua. Además, utilizamos un sistema de motores para las ruedas que permiten al robot moverse de forma autónoma. Un aspecto clave es la programación, donde definimos las reglas de movimiento y la lógica para la recolección de datos y residuos. Cada componente trabaja en conjunto para que el robot pueda navegar y monitorear el agua de manera efectiva.
+  </p>
+
+
+  <h1 class="importancia">Importancia y Conclusión</h1>
+  <img class="Robot_img4" src="{{ url_for('static', filename='img/robot2.jpeg') }}" alt="Importancia y Conclusión">
+  <p class="importancia_texto">
+    La importancia de este proyecto va más allá de la robótica. Nuestro prototipo es un ejemplo de cómo la tecnología puede ser una herramienta poderosa para el cuidado del medio ambiente. Al monitorear la calidad del agua y recolectar residuos, nuestro robot ayuda a crear conciencia sobre los problemas hídricos en nuestra comunidad. Este proyecto no es solo la construcción de una máquina, sino una forma de demostrar que la innovación y el ingenio juvenil pueden generar un impacto positivo. Fue una experiencia invaluable que nos enseñó a aplicar nuestros conocimientos en un contexto real y a trabajar en equipo para resolver un problema importante.
+  </p>
+  
+
+  <h1 class="galeria">Galería</h1>
+  <div class="galeria_container">
+    </div>
+      <img class="img1" src="{{ url_for('static', filename='img/robot3.jpeg') }}" alt="Imagen 1">
+      <img class="img2" src="{{ url_for('static', filename='img/proceso1.jpeg') }}" alt="Imagen 2">
+      <img class="img3" src="{{ url_for('static', filename='img/robot1.jfif') }}" alt="Imagen 3">
+      <img class="img4" src="{{ url_for('static', filename='img/robot4.jpeg') }}" alt="Imagen 4">
+      <img class="img5" src="{{ url_for('static', filename='img/robot5.jpeg') }}" alt="Imagen 5">
+
+  </div>
+</main>
+</body>
+<footer>
+  <p>Unidad Educativa Particular Siete de Mayo - Proyecto CREA &copy; 2025-2026</p>
+</footer>
+</html>

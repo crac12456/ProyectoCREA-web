@@ -1,0 +1,386 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  text-decoration: none;
+}
+body {
+  background-color: black;
+  background: #3F84E5;
+  opacity: 0;
+  transition: opacity 0.8s ease-in-out;
+}
+body.loaded {
+  opacity: 1;  /* cuando agregamos la clase loaded → aparece */
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 40px;
+  flex-wrap: wrap;
+  background-color: #fbbc5d;
+}
+.bordes {
+  align-items: center;
+  background-color: white;
+  margin: 30px auto;
+  padding: 30px;
+  max-width: 1000px;
+  width: 90%;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border-radius: 8px;
+}
+.logo {
+  width: 70px;
+  height: 70px;
+}
+
+.Tema {
+  list-style: none;
+  font-size: 32px;
+  font-weight: bold;
+  color: black;
+  margin-left: 250px;
+  text-align: center;
+}
+
+.left li {
+  margin-right: 0%;
+}
+
+.right {
+  list-style: none;
+  display: flex;
+  gap: 15px;
+  margin: 0;
+  padding: 0;
+}
+
+.right li a {
+  color: white;
+  background-color: black;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 18px;
+  text-decoration: none;
+}
+
+.right li a:hover {
+  background-color: rgb(160, 95, 130);
+}
+.bordes {
+  text-align: center;
+  align-items: center;
+  background-color: white;
+  margin: 0px auto;
+  padding: 30px;
+  max-width: 1500px;
+  width: 90%;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border-radius: 8px;
+}
+main {
+  background-color: #3F84E5;
+  padding: 30px 0;
+}
+.Robot_img1 {
+  float: center;
+  width: 30%;
+  border-radius: 5%;
+  margin: 0% 1% 0% 1%;
+  background-color: rgb(252, 252, 252);
+  margin-inline-start: 35%;
+  position: relative;
+  max-width: 50%;
+  height: auto;
+  margin-bottom: 20px;
+  border: #e8e8e8;
+}
+.quesomos, .Nuestro_proyecto, .desarrollo_proyecto, .importancia {
+  text-align: center;
+  font-size: 40px;
+  margin: 15px 0 15px 0;
+}
+.galeria {
+  font-size: 40px;
+  padding: 0%;
+}
+.quesomos_texto, .proyecto_texto, .desarrollo_texto, .importancia_texto {
+  font-size: 30px;
+  text-align: justify;
+  line-height: 1.6;
+  margin: 0 auto 40px auto;
+  max-width: 1200px;
+  padding: 0 15px;
+}
+.Robot_img2 {
+  float: center;
+  width: 30%;
+  border-radius: 5%;
+  margin: 0% 1% 0% 1%;
+  background-color: transparent;
+  margin-inline-start: 35%;
+  position: relative;
+  max-width: 50%;
+  height: auto;
+  margin-bottom: 20px;
+  border: #e8e8e8;
+}
+.Robot_img3, .Robot_img4 {
+  float: center;
+  width: 30%;
+  border-radius: 5%;
+  margin: 0% 1% 0% 1%;
+  background-color: transparent;
+  margin-inline-start: 0%;
+  position: relative;
+  max-width: 50%;
+  height: auto;
+  margin-bottom: 20px;
+  border: #e8e8e8;
+}
+.mapa iframe {
+  text-align: center;
+  width: 100%;
+  height: 700px; 
+  border: none;
+  border-radius: 10px; 
+}
+.Datos {
+  font: 30px;
+}
+.testcam {
+  float: center;
+  width: 90%;
+  border-radius: 5%;
+  margin: 0% 1% 0% 1%;
+  background-color: transparent;
+  margin-inline-start: 5.5%;
+  position: relative;
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 20px;
+  border: #e8e8e8;
+}
+.control-container {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.6);
+  position: relative; 
+  margin: 20px auto;
+}
+.control-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0; 
+  width: 100%;
+}
+.btn-control {
+  width: 50px;
+  height: 50px;
+  background: white;
+  color: black;
+  font-size: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  position: absolute;
+}
+.btn-control:hover {
+  background: #fbbc5d;
+  transform: scale(1.1);
+}
+.btn-control.active {
+  transform: scale(1.2);
+  background-color: #ffd27f;
+}
+.btn-control.center {
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size: 28px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.btn-control.up {
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.btn-control.down {
+  bottom: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.btn-control.left {
+  top: 50%;
+  left: 10%;
+  transform: translateY(-50%);  /* solo mover en vertical */
+}
+.btn-control.right {
+  top: 50%;
+  right: 10%;
+  transform: translateY(-50%);  /* igual que el izquierdo */
+}
+.btn-control.center {
+  width: 60px;
+  height: 60px;
+  font-size: 28px;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.datosrobot {
+  font-size: 30px;
+  list-style: none;
+}
+.pH {
+  font-size: 30px;
+}
+.Turbidez {
+  font-size: 30px;
+}
+.Temperatura {
+  font-size: 30px;
+}
+.chart-container {
+  width: 100%;
+  max-width: 500px; /* PC */
+  margin: 20px auto;
+  position: relative;
+  aspect-ratio: 16 / 9; /* mantiene proporción 16:9 */
+}
+.img1, .img2, .img3, .img4, .img5 {
+  width: 40%;
+}
+/*.galeria_container {
+  width: 40%;
+  height: 100%;
+  max-width: 100px;
+  padding: 0%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 250px;
+  grid-gap: 20px;
+}
+
+/* Canvas ocupa todo el contenedor */
+.chart-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+  font: 20px;
+}
+footer {
+  background-color: black;
+  color: white;
+  text-align: center;
+  font-size: 16px;
+  padding: 10px;
+}
+@media screen and (max-width: 768px) {
+  header {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .Tema {
+    font-size: 30px;
+    margin: 10px 0;
+    position: static; /* vuelve al flujo normal */
+  }
+  .right {
+    position: static; /* vuelve al flujo normal */
+    flex-direction: row; /* horizontal */
+    flex-wrap: wrap;     /* permite que los botones bajen si no caben */
+    justify-content: center;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .right li a {
+    width: auto;
+    padding: 6px 10px;
+    font-size: 14px;
+  }
+
+  .logo {
+    position: static; /* vuelve al flujo normal */
+    width: 50px;
+    height: 50px;
+    margin-bottom: 10px;
+  }
+
+  .robot-img {
+    width: 100%;
+  }
+  .robot-img2 {
+    width: 100%;
+  }
+  .quesomos, .Nuestro_proyecto, .desarrollo_proyecto, .importancia {
+    font-size: 30px;
+  }
+  .bordes {
+    padding: 20px;
+    width: 95%;
+  }
+  .control-container {
+        font-size: 16px;
+        padding: 10px;
+    }
+  .mapa iframe {
+    height: 300px;
+  }
+}
+  .Datos {
+    font-size: 24px;
+  }
+  .datosrobot li {
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+  .chart-container {
+    width: 95%;
+    max-width: 100%;
+  }
+
+  .Datos {
+    font-size: 40px;
+  }
+
+  .datosrobot li {
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+
+  .pH, .Turbidez, .Temperatura {
+    font-size: 30px;
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 5px;
+  }
+    .Robot_img1, .Robot_img2, .Robot_img3, .Robot_img4 {
+    float: none; 
+    width: 90%; 
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+  }
+
+  .quesomos_texto, .proyecto_texto, .desarrollo_texto, .importancia_texto {
+    font-size: 25px;
+    float: none; 
+    text-align: justify;
+    padding: 0 10px;
+  } 
