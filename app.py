@@ -183,41 +183,6 @@ def obtener_datos():
         })
     return jsonify(lecturas)
 
-# envia el ultimo dato para actualizar la tabla como un json a chart.js
-# @app.route('/api/ultimo', methods = ['GET'])
-# def obtener_ultimo():
-#     import random
-#     global ultimo_ph, ultimo_turbidez, ultimo_temperatura
-
-#     if ultimo_ph > 10 or ultimo_ph < 1 :
-#         ultimo_ph = round(random.uniform(6.5, 8.5), 2)
-#     if ultimo_turbidez > 5 or ultimo_turbidez < 0:
-#         ultimo_turbidez = round(random.uniform(0.1, 5.0), 2)
-#     if ultimo_temperatura < 5 or ultimo_temperatura > 40 :
-#         ultimo_temperatura = round(random.randint(8, 20))
-        
-#     return jsonify({
-#         'dispositivo': ultimo_dispositivo, 
-#         'temperatura': ultimo_temperatura, 
-#         'ph': ultimo_ph, 
-#         'turbidez': ultimo_turbidez, 
-#         'latitud': ultimo_latitud, 
-#         'longitud': ultimo_longitud, 
-#         'altitud': ultimo_altitud, 
-#         'velocidad': ultimo_velocidad, 
-#     })
-
-# @app.route('/status')
-# def system_status():
-#     return jsonify({
-#         "mqtt_connected": client is not None and client.is_connected() if client else False,
-#         "broker": "localhost",
-#         "port": 1883,
-#         "topics": {
-#             "publish": topic_pub,
-#             "subscribe": "esp32/robot/sensores"
-#         }
-#     })
 
 @app.route('/api/camara', methods=['POST'])
 def get_frame():
