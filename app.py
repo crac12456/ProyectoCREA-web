@@ -84,13 +84,9 @@ def gps():
 def datos():
     return render_template('datos.html')
 
-@app.route('/control')
-def control():
-    return render_template('control.html')
-
-@app.route('/admin')
-def admin():
-    return render_template('admin.html')
+@app.route('/camara')
+def camara():
+    return render_template('camara.html')
 
 """
 API de datos
@@ -159,21 +155,21 @@ def obtener_datos():
 
     return jsonify(lecturas)
 
-@app.route('/api/ultimo', methods = ['GET'])
-def obtener_ultimo():
-    return jsonify({
-        'dispositivo': ultimo_dispositivo, 
-        'temperatura': ultimo_temperatura, 
-        'ph': ultimo_ph, 
-        'turbidez': ultimo_turbidez, 
-        'latitud': ultimo_latitud, 
-        'longitud': ultimo_longitud, 
-        'altitud': ultimo_altitud, 
-        'velocidad': ultimo_velocidad, 
-    })
+# @app.route('/api/ultimo', methods = ['GET'])
+# def obtener_ultimo():
+#     return jsonify({
+#         'dispositivo': ultimo_dispositivo, 
+#         'temperatura': ultimo_temperatura, 
+#         'ph': ultimo_ph, 
+#         'turbidez': ultimo_turbidez, 
+#         'latitud': ultimo_latitud, 
+#         'longitud': ultimo_longitud, 
+#         'altitud': ultimo_altitud, 
+#         'velocidad': ultimo_velocidad, 
+#     })
 
-@app.route('/control/<key>', methods=['POST'])
-def control_key(key):
+@app.route('/camara/<key>', methods=['POST'])
+def camara_key(key):
     commands = {
         "w": "adelante",
         "s": "atras",
