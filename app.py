@@ -97,6 +97,7 @@ Esto es una REST API, la cual funciona a travez de datos en formato JSON
 @app.route('/api/datos', methods=['POST'])
 def api_datos():
     data = request.get_json() # convierte los datos del json a una variable
+    print("JSON recibido ", data)
 
     #convetimos las variables en globales para poder utilizarlas en diferentes puntos
     global ultimo_dispositivo, ultimo_temperatura, ultimo_ph, ultimo_turbidez
@@ -132,6 +133,7 @@ def api_datos():
 
 @app.route('/api/datos', methods = ['GET'])
 def obtener_datos():
+
     with db_lock:
         with get_db() as conn: 
             c = conn.cursor()
