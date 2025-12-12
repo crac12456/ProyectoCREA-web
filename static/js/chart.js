@@ -81,6 +81,36 @@ document.addEventListener("DOMContentLoaded", function() {
         return phSimulado.toFixed(2);
     }
 
+    // 🔹 Simulación mejorada de Turbidez (más natural)
+    let simularTurbidez = true; // Cambia a false si conectas el sensor real
+    let TurbidezSimulado = 5.0; // Valor base
+    function obtenerTurbidezSimulado() {
+        // Pequeñas variaciones aleatorias suaves (sube o basja ligeramente)
+        let cambio = (Math.random() - 0.5) * 0.1; // ±0.05 aprox
+        TurbidezSimulado += cambio;
+
+        // Limitar entre 6.5 y 8.0
+        if (TurbidezSimulado > 5.3) TurbidezSimulado = 5.3;
+        if (TurbidezSimulado < 4.8) TurbidezSimulado = 4.8;
+
+        return TurbidezSimulado.toFixed(2);
+    }
+
+    // 🔹 Simulación mejorada de Temperatura (más natural)
+    let simularTemperatura = true; // Cambia a false si conectas el sensor real
+    let TemperaturaSimulado = 15.0; // Valor base
+    function obtenerTempereaturaSimulado() {
+        // Pequeñas variaciones aleatorias suaves (sube o basja ligeramente)
+        let cambio = (Math.random() - 0.5) * 0.1; // ±0.05 aprox
+        TurbidezSimulado += cambio;
+
+        // Limitar entre 6.5 y 8.0
+        if (TurbidezSimulado > 15.3) TurbidezSimulado = 15.3;
+        if (TurbidezSimulado < 14.8) TurbidezSimulado = 14.8;
+
+        return TurbidezSimulado.toFixed(2);
+    }
+
     async function updateTable() {
         try {
             const response = await fetch("api/datos");
@@ -118,8 +148,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
             // Si simulamos, solo el pH se reemplaza por el simulado
             const phReal = simularPH ? obtenerPHSimulado() : data.ph;
+            const turbidezReal = simularTurbidez ? obtenerTurbidezSimulado() : data.turbidez
+            const temperaturaReal = simularTemperatura ? obtenerTemperaturaSimulado() : data.turbidez
 
-            updateCharts(phReal, data.turbidez, data.temperatura);
+            updateCharts(phReal, turbidezReal, data.temperatura);
         } catch (error) {
             console.error("Error obteniendo datos en vivo:", error);
         }
