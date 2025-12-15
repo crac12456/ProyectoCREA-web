@@ -66,49 +66,46 @@ document.addEventListener("DOMContentLoaded", function() {
         tempChart.update();
     }
 
-    // 🔹 Simulación mejorada de pH (más natural)
-    let simularPH = true; // Cambia a false si conectas el sensor real
-    let phSimulado = 7.0; // Valor base
+    // 🔹 Simulación mejorada de pH
+    let simularPH = true;
+    let phSimulado = 7.0;
+
     function obtenerPHSimulado() {
-        // Pequeñas variaciones aleatorias suaves (sube o baja ligeramente)
-        let cambio = (Math.random() - 0.5) * 0.1; // ±0.05 aprox
+        let cambio = (Math.random() - 0.5) * 0.1;
         phSimulado += cambio;
 
-        // Limitar entre 6.5 y 8.0
         if (phSimulado > 8.0) phSimulado = 8.0;
         if (phSimulado < 6.5) phSimulado = 6.5;
 
         return phSimulado.toFixed(2);
     }
 
-    // 🔹 Simulación mejorada de Turbidez (más natural)
-    let simularTurbidez = true; // Cambia a false si conectas el sensor real
-    let TurbidezSimulado = 5.0; // Valor base
+    // 🔹 Simulación mejorada de Turbidez
+    let simularTurbidez = true;
+    let turbidezSimulado = 5.0;
+
     function obtenerTurbidezSimulado() {
-        // Pequeñas variaciones aleatorias suaves (sube o basja ligeramente)
-        let cambio = (Math.random() - 0.5) * 0.1; // ±0.05 aprox
-        TurbidezSimulado += cambio;
+        let cambio = (Math.random() - 0.5) * 0.1;
+        turbidezSimulado += cambio;
 
-        // Limitar entre 6.5 y 8.0
-        if (TurbidezSimulado > 5.3) TurbidezSimulado = 5.3;
-        if (TurbidezSimulado < 4.8) TurbidezSimulado = 4.8;
+        if (turbidezSimulado > 5.3) turbidezSimulado = 5.3;
+        if (turbidezSimulado < 4.8) turbidezSimulado = 4.8;
 
-        return TurbidezSimulado.toFixed(2);
+        return turbidezSimulado.toFixed(2);
     }
 
-    // 🔹 Simulación mejorada de Temperatura (más natural)
-    let simularTemperatura = true; // Cambia a false si conectas el sensor real
-    let TemperaturaSimulado = 15.0; // Valor base
-    function obtenerTempereaturaSimulado() {
-        // Pequeñas variaciones aleatorias suaves (sube o basja ligeramente)
-        let cambio = (Math.random() - 0.5) * 0.1; // ±0.05 aprox
-        TurbidezSimulado += cambio;
+    // 🔹 Simulación mejorada de Temperatura
+    let simularTemperatura = true;
+    let temperaturaSimulada = 15.0;
 
-        // Limitar entre 6.5 y 8.0
-        if (TurbidezSimulado > 15.3) TurbidezSimulado = 15.3;
-        if (TurbidezSimulado < 14.8) TurbidezSimulado = 14.8;
+    function obtenerTemperaturaSimulada() {
+        let cambio = (Math.random() - 0.5) * 0.1;
+        temperaturaSimulada += cambio;
 
-        return TurbidezSimulado.toFixed(2);
+        if (temperaturaSimulada > 15.3) temperaturaSimulada = 15.3;
+        if (temperaturaSimulada < 14.8) temperaturaSimulada = 14.8;
+
+        return temperaturaSimulada.toFixed(2);
     }
 
     async function updateTable() {
@@ -146,12 +143,11 @@ document.addEventListener("DOMContentLoaded", function() {
             const response = await fetch("api/ultimo");
             const data = await response.json();
 
-            // Si simulamos, solo el pH se reemplaza por el simulado
             const phReal = simularPH ? obtenerPHSimulado() : data.ph;
-            const turbidezReal = simularTurbidez ? obtenerTurbidezSimulado() : data.turbidez
-            const temperaturaReal = simularTemperatura ? obtenerTemperaturaSimulado() : data.turbidez
+            const turbidezReal = simularTurbidez ? obtenerTurbidezSimulado() : data.turbidez;
+            const temperaturaReal = simularTemperatura ? obtenerTemperaturaSimulada() : data.temperatura;
 
-            updateCharts(phReal, turbidezReal, data.temperatura);
+            updateCharts(phReal, turbidezReal, temperaturaReal);
         } catch (error) {
             console.error("Error obteniendo datos en vivo:", error);
         }
@@ -159,5 +155,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // 🔹 Actualización periódica de tabla
     setInterval(updateTable, 10000);
-    updateTable(); // Llamada inicial
+    updateTable();
 });
+
