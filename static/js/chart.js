@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function() {
         phSimulado += cambio;
 
         if (phSimulado > 8.0) phSimulado = 8.0;
-        if (phSimulado < 6.5) phSimulado = 6.5;
+        if (phSimulado < 7.0) phSimulado = 7.0;
 
         return phSimulado.toFixed(2);
     }
