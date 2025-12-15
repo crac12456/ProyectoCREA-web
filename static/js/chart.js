@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", function() {
         let cambio = (Math.random() - 0.5) * 0.1;
         phSimulado += cambio;
 
-        if (phSimulado > 8.0) phSimulado = 8.0;
+        if (phSimulado > 7.5) phSimulado = 7.5;
         if (phSimulado < 7.0) phSimulado = 7.0;
 
         return phSimulado.toFixed(2);
@@ -96,14 +96,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // 🔹 Simulación mejorada de Temperatura
     let simularTemperatura = true;
-    let temperaturaSimulada = 15.0;
+    let temperaturaSimulada = 25.0;
 
     function obtenerTemperaturaSimulada() {
         let cambio = (Math.random() - 0.5) * 0.1;
         temperaturaSimulada += cambio;
 
-        if (temperaturaSimulada > 15.3) temperaturaSimulada = 15.3;
-        if (temperaturaSimulada < 14.8) temperaturaSimulada = 14.8;
+        if (temperaturaSimulada > 25.3) temperaturaSimulada = 25.3;
+        if (temperaturaSimulada < 24.8) temperaturaSimulada = 24.8;
 
         return temperaturaSimulada.toFixed(2);
     }
